@@ -45,11 +45,11 @@
           "mappedType": "text"
         }
       },
-      "name": "post",
+      "name": "bost",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "post_pkey",
+          "keyName": "bost_pkey",
           "columnNames": [
             "id"
           ],

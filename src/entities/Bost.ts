@@ -1,7 +1,7 @@
 import { Entity, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core'
 
 @Entity()
-export class Post {
+export class Bost {
   [OptionalProps]?: 'createdAt' | 'updatedAt'
 
   @PrimaryKey()

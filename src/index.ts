@@ -10,10 +10,10 @@ const main = async () => {
   orm.getMigrator().up()
 
   // =============== MikroORM examples ===============
-  // const post = orm.em.create(Post, {title: 'test post'}) // NOT auto-added to db
-  // await orm.em.persistAndFlush(post) // pushed to DB
+  // const bost = orm.em.create(Bost, {title: 'test bost'}) // NOT auto-added to db
+  // await orm.em.persistAndFlush(bost) // pushed to DB
   // // BUT, the streamlined method...
-  // await orm.em.nativeInsert(Post, {title: 'test post 2'}) // doesn't autofill data...
+  // await orm.em.nativeInsert(Bost, {title: 'test bost 2'}) // doesn't autofill data...
 
   // =============== Express set-up ===============
   const app = express()

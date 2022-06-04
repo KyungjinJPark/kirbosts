@@ -1,7 +1,7 @@
 import { MikroORM } from '@mikro-orm/core'
 import path from 'path';
 import { __prod__ } from './constants';
-import { Post } from './entities/Post';
+import { Bost } from './entities/Bost';
 
 export default {
   migrations: {
@@ -15,5 +15,5 @@ export default {
   allowGlobalContext: true,
   debug: !__prod__,
   type: 'postgresql',
-  entities: [Post],
+  entities: [Bost],
 } as Parameters<typeof MikroORM.init>[0]
