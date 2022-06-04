@@ -14,6 +14,7 @@
   - Database name: `kirbosts`
 - MikroORM
 - Express + Apollo GraphQL API
+  - interacts w MikroORM
 
 ## Tech
 
@@ -45,3 +46,6 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
 - When using MikroORM, put all new `entity`s in the init and make a new entity definition file
 - This does not automatically create the entity table in PostgreSQL
   - Use CLI to create migrations. Then add code to run migration in `main`
+- Sometimes, Apollo resolvers need access to `ORM`
+- Tuto said I need `import "reflect-metadata"` in index.ts, but it's working without so far...
+  - Though, GQL does require it, so I guess I'll do it
