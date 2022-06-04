@@ -8,6 +8,12 @@
 
 ### Dev
 
+- TypeScript
+- TS watch w/ nodemon
+- Running seperately installed PostgreSQL server software
+  - Database name: `kirbosts`
+- MikroORM
+
 ## Tech
 
 - React
@@ -32,3 +38,9 @@ A certain pink, floaty, ball-like character is the mascot of a discord server I 
 The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) by [Ben Awad](https://www.youtube.com/c/BenAwad97).
 
 ### Notes to Self
+
+- Use `sudo systemctl start postgresql.service` to check if PostgreSQL is runnning
+- WSL doesn't have `systemctl start postgresql.service`, so use `service postgresql start`
+- When using MikroORM, put all new `entity`s in the init and make a new entity definition file
+- This does not automatically create the entity table in PostgreSQL
+  - Use CLI to create migrations. Then add code to run migration in `main`
