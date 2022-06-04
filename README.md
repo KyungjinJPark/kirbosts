@@ -13,6 +13,7 @@
 - Running seperately installed PostgreSQL server software
   - Database name: `kirbosts`
 - MikroORM
+- Express + Apollo GraphQL API
 
 ## Tech
 
