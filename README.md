@@ -6,6 +6,9 @@
 
 ### App
 
+- CRUD Bosts (Posts)
+- User accounts
+
 ### Dev
 
 - TypeScript
@@ -14,7 +17,7 @@
   - Database name: `kirbosts`
 - MikroORM
 - Express + Apollo GraphQL API
-  - interacts w MikroORM
+  - interacts w/ MikroORM
 
 ## Tech
 
@@ -47,5 +50,7 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
 - This does not automatically create the entity table in PostgreSQL
   - Use CLI to create migrations. Then add code to run migration in `main`
 - Sometimes, Apollo resolvers need access to `ORM`
-- Tuto said I need `import "reflect-metadata"` in index.ts, but it's working without so far...
+- Tuto said I need `import 'reflect-metadata'` in index.ts, but it's working without so far...
   - Though, GQL does require it, so I guess I'll do it
+- To handle user sessions:
+  - On login, store a cookie in user browser
