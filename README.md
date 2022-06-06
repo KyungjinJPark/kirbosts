@@ -10,6 +10,8 @@
 - User accounts
 - User sessions
 
+- Web client
+
 ### Dev
 
 - TypeScript
@@ -20,6 +22,9 @@
 - Express + Apollo GraphQL API
   - interacts w/ MikroORM
 - Express Sessions + Redis
+
+- Next.js
+- Chakra-ui
 
 ## Tech
 

@@ -1,2 +1,11 @@
-/node_modules
-/dist
+node_modules
+
+# SERVER
+/server/dist
+
+# WEBSITE
+/webclient/build
+
+# next.js
+/webclient/.next
+/webclient/out
