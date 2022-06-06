@@ -1,6 +1,6 @@
-import { Bost } from "../entities/Bost";
-import { MyContext } from "../types";
-import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Bost } from '../entities/Bost';
+import { MyContext } from '../types';
+import { Arg, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 
 @Resolver()
 export class BostResolver { 

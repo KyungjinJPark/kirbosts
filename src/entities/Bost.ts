@@ -21,5 +21,4 @@ export class Bost {
   @Field()
   @Property({type: 'text'})
   title!: string
-
 }
