@@ -8,6 +8,7 @@
 
 - CRUD Bosts (Posts)
 - User accounts
+- User sessions
 
 ### Dev
 
@@ -18,6 +19,7 @@
 - MikroORM
 - Express + Apollo GraphQL API
   - interacts w/ MikroORM
+- Express Sessions + Redis
 
 ## Tech
 
@@ -52,5 +54,10 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
 - Sometimes, Apollo resolvers need access to `ORM`
 - Tuto said I need `import 'reflect-metadata'` in index.ts, but it's working without so far...
   - Though, GQL does require it, so I guess I'll do it
-- To handle user sessions:
-  - On login, store a cookie in user browser
+- To handle user sessions: (all implemented by express-session + plugins)
+  - On login, place cookie in user browser
+    - Cookie (random-seeming hash) is a signed (using the secret) key into Redis database
+  - In Redis databse, that key (unsigned version i think) points to session data (e.g. {userId: 896})
+  - This cookie will be passed to the server with every user request
+  - Express gets redis obj for that key and passes it to the Apollo middleware
+  - Apollo passes it to the handlers in the context's `req.session`

@@ -1,5 +1,5 @@
 import { MyContext } from '../types';
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { User } from '../entities/User';
 import argon2 from 'argon2'
 
@@ -32,10 +32,26 @@ class FieldError {
 // TODO: user IDs increment even on failed register attempts
 @Resolver()
 export class UserResolver { 
+  @Query(() => User, {nullable: true})
+  async me(
+    @Ctx() {em, req}: MyContext
+  ) {
+    console.log(req.session);
+
+    // not logged in
+    const userId = req.session.userId
+    if (req.session.userId === undefined) {
+      return null
+    }
+    
+    const user = await em.findOne(User, {id: userId})
+    return user
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() {em}: MyContext
+    @Ctx() {em, req}: MyContext
   ): Promise<UserResponse> {
     if (options.username.length < 3) {
       return {
@@ -78,13 +94,15 @@ export class UserResolver {
           break;
       }
     }
+    // Store `UserId` in the session storage
+    req.session.userId = user.id
     return {user}
   }
 
   @Mutation(() => UserResponse) // TODO: should this be a `Query`?
   async login(
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() {em}: MyContext
+    @Ctx() {em, req}: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, {username: options.username})
     if (user === null) {
@@ -104,6 +122,8 @@ export class UserResolver {
         }]
       }
     }
+    // Log-in success. Store `UserId` in the session storage
+    req.session.userId = user.id
     return {user}
   }
 }
