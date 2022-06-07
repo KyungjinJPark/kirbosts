@@ -4,40 +4,33 @@
 
 ## Features
 
-### App
+### Application Features
+<!-- TODO: business-englishify this -->
 
+- Web client
 - CRUD Bosts (Posts)
 - User accounts
 - User sessions
 
-- Web client
+### Features for Devs
+<!-- TODO: business-englishify this -->
 
-### Dev
+#### Server
 
-- TypeScript
-- TS watch w/ nodemon
-- Running seperately installed PostgreSQL server software
-  - Database name: `kirbosts`
-- MikroORM
-- Express + Apollo GraphQL API
-  - interacts w/ MikroORM
-- Express Sessions + Redis
+- `TypeScript` + watch w/ nodemon
+- `PostgreSQL` server
+- `MikroORM`
+- `Express` + `Apollo` + `GraphQL API`
+  - interacts w/ `MikroORM`
+- `Express Sessions` using `Redis` server
 
-- Next.js
-- Chakra-ui
+#### Webclient
 
-## Tech
+- `React` + `Next.js` 
+- `Chakra-ui`
+- `URQL` + `GraphQL client`
 
-- React
-- TypeScript
-- GraphQL
-- URQL/Apollo
-- Node.js
-- PostgreSQL
-- TypeORM
-- Redis
-- Next.js
-- TypeGraphQL
+---
 
 ## Misc
 
@@ -49,10 +42,11 @@ A certain pink, floaty, ball-like character is the mascot of a discord server I 
 
 The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) by [Ben Awad](https://www.youtube.com/c/BenAwad97).
 
-### Notes to Self
+### Learning Notes
 
 - Use `sudo systemctl start postgresql.service` to check if PostgreSQL is runnning
 - WSL doesn't have `systemctl start postgresql.service`, so use `service postgresql start`
+  - Database name: `kirbosts`
 - When using MikroORM, put all new `entity`s in the init and make a new entity definition file
 - This does not automatically create the entity table in PostgreSQL
   - Use CLI to create migrations. Then add code to run migration in `main`
@@ -66,3 +60,4 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
   - This cookie will be passed to the server with every user request
   - Express gets redis obj for that key and passes it to the Apollo middleware
   - Apollo passes it to the handlers in the context's `req.session`
+- remember to run `watch` AND `dev`. I forgot and spent more time than I'd like to admit trying to debug some seemingly CORS issue.

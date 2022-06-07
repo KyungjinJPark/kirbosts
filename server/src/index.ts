@@ -12,6 +12,7 @@ import connectRedis from 'connect-redis' // if types are not included, this will
 import session from "express-session"
 import { __prod__ } from './constants'
 import { MyContext } from './types'
+import cors from 'cors'
 
 const main = async () => {
   // =============== Redis set-up ===============
@@ -31,6 +32,11 @@ const main = async () => {
 
   // =============== Express set-up ===============
   const app = express()
+  // cors
+  app.use(cors({
+    origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+    credentials: true
+  }))
   // testing home
   app.get('/', (_, res) => {
     res.send('helo from /')
@@ -68,14 +74,10 @@ const main = async () => {
   // ...before the Apollo middleware (order matters)
   // TODO: these were needed for the GQL studio
   app.set('trust proxy', !__prod__)
-  const corsOptions = {
-    origin: ["https://studio.apollographql.com"],
-    credentials: true
-  } 
   // TODO: these were needed for the GQL studio
   apolloServer.applyMiddleware({
     app,
-    cors: corsOptions,
+    cors: false,
     path: "/graphql"
   })
   // listen at port 4000
