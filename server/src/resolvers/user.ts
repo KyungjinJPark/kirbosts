@@ -36,8 +36,6 @@ export class UserResolver {
   async me(
     @Ctx() {em, req}: MyContext
   ) {
-    console.log(req.session);
-
     // not logged in
     const userId = req.session.userId
     if (req.session.userId === undefined) {
@@ -72,6 +70,20 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(options.password)
     const user = em.create(User, {username: options.username, password: hashedPassword})
     try {
+      /*
+      // INSERT USING QUERY BUILDER
+      const result = await (em as EntityManager) // From mikroORM/psql
+        .createQueryBuilder(User)
+        .getKnexQuery()
+        .insert({
+          username: options.username,
+          password: hashedPassword,
+          created_at: new Date(), // need real database column names and mORM changes them
+          updated_at: new Date(), // need to manually set `new Date()` bc nor created thorugh mORM
+        })
+        .returning("*") grab all columns
+      user = result[0]
+      */
       await em.persistAndFlush(user)
     } catch (err) {
       // Username already taken
