@@ -29,6 +29,7 @@
 - `React` + `Next.js` 
 - `Chakra-ui`
 - `URQL` + `GraphQL client`
+- `GraphQL Code Generator`
 
 ---
 
@@ -60,4 +61,9 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
   - This cookie will be passed to the server with every user request
   - Express gets redis obj for that key and passes it to the Apollo middleware
   - Apollo passes it to the handlers in the context's `req.session`
-- remember to run `watch` AND `dev`. I forgot and spent more time than I'd like to admit trying to debug some seemingly CORS issue.
+- Temember to run `watch` AND `dev`. I forgot and spent more time than I'd like to admit trying to debug some seemingly CORS issue.
+- To provide the webclient code with the types from the tgql schema, use graphql-codegen
+  - Workflow:
+    - Add GQL operation to src/graphql/**/\*.graphql
+    - `npm run gen`
+    - Use the generated hook to call the mutation
