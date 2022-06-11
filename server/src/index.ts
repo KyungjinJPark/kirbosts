@@ -10,7 +10,7 @@ import { UserResolver } from './resolvers/user'
 import { createClient } from "redis"
 import connectRedis from 'connect-redis' // if types are not included, this will be red squigglied
 import session from "express-session"
-import { __prod__ } from './constants'
+import { COOKIE_NAME, __prod__ } from './constants'
 import { MyContext } from './types'
 import cors from 'cors'
 
@@ -55,7 +55,7 @@ const main = async () => {
   // Apply redis middleware...
   app.use(
     session({
-      name: 'qid_maybe_depricated', // TODO: i think cookie name
+      name: COOKIE_NAME, // TODO: i think cookie name
       store: new RedisStore({
         client: redisClient,
         disableTouch: true // TODO: i have no idea what this does
