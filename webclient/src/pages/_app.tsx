@@ -4,7 +4,7 @@ import theme from '../theme'
 import { AppProps } from 'next/app'
 import { Provider, createClient, dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
-import { LoginMutation, RegisterMutation, MeDocument, MeQuery } from '../generated/graphql'
+import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation } from '../generated/graphql'
 
 const client = createClient({
   url: 'http://localhost:4000/graphql',
@@ -32,6 +32,11 @@ const client = createClient({
                 me: result.register.user
               }
             }
+          })
+        },
+        logout: (result: LogoutMutation, args, cache, info) => {
+          cache.updateQuery({query: MeDocument}, (data: MeQuery): MeQuery  => {
+            return {me: null}
           })
         },
       },
