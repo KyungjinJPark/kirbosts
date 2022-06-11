@@ -3,22 +3,22 @@ import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import { InputField } from '../components/InputField'
 import { Wrapper } from '../components/Wrapper'
-import { useRegisterMutation } from '../generated/graphql'
+import { useLoginMutation } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 
-interface registerProps {}
+interface loginProps {}
 
-const register: React.FC<registerProps> = ({}) => {
+const login: React.FC<loginProps> = ({}) => {
   const router = useRouter()
-  const [, register] = useRegisterMutation()
+  const [, login] = useLoginMutation()
 
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{username: '', password: ''}}
         onSubmit={async (vals, {setErrors}) => {
-          const response = await register(vals)
-          const data = response.data?.register
+          const response = await login({options: vals})
+          const data = response.data?.login
           if (data.errors !== null) {
             setErrors(toErrorMap(data.errors))
           } else if (data.user !== null) {
@@ -42,7 +42,7 @@ const register: React.FC<registerProps> = ({}) => {
                 placeholder='Password'
               ></InputField>
             </Box>
-            <Button type="submit" isLoading={isSubmitting} mt={4} colorScheme='teal'>Register</Button>
+            <Button type="submit" isLoading={isSubmitting} mt={4} colorScheme='teal'>Login</Button>
           </Form>
         )}
       </Formik>
@@ -50,4 +50,4 @@ const register: React.FC<registerProps> = ({}) => {
   )
 }
 
-export default register // Next.js needs this
+export default login

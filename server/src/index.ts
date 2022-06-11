@@ -63,8 +63,12 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
-        sameSite: 'none', // TODO: what does this do
-        secure: true // cookie only works in https
+        // Cookie settings for Webclient
+        sameSite: 'lax', // TODO: what does this do
+        secure: false // cookie only works in https
+        // // Cookie settings for Apollo Sandbox
+        // sameSite: 'none',
+        // secure: true
       },
       saveUninitialized: false,
       secret: "secret_should_be_hidden",

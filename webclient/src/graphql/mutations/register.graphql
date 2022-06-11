@@ -4,10 +4,6 @@ mutation Register($username: String!, $password: String!) {
       field
       message
     }
-    user {
-      id
-      username
-      createdAt
-    }
+    user {...CommonUser}
   }
 }

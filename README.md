@@ -67,3 +67,4 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
     - Add GQL operation to src/graphql/**/\*.graphql
     - `npm run gen`
     - Use the generated hook to call the mutation
+- Some repeated queries will not return new values because of the urql cache
