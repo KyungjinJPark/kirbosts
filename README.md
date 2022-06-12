@@ -11,6 +11,7 @@
 - CRUD Bosts (Posts)
 - User accounts
 - User sessions
+- Forgot password
 
 ### Features for Devs
 <!-- TODO: business-englishify this -->
@@ -23,6 +24,8 @@
 - `Express` + `Apollo` + `GraphQL API`
   - interacts w/ `MikroORM`
 - `Express Sessions` using `Redis` server
+- Password reset w/ `Nodemailer`
+  - interacts w/ `Redis` to make [tokens?]
 
 #### Webclient
 

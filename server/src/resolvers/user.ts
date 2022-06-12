@@ -2,7 +2,9 @@ import { MyContext } from '../types';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { User } from '../entities/User';
 import argon2 from 'argon2'
-import { COOKIE_NAME, EMAIL_REGEX } from '../constants';
+import { COOKIE_NAME, EMAIL_REGEX, FORGOT_PASSWORD_PREFIX } from '../constants';
+import { sendEmail } from '../utils/sendEmail';
+import { v4 } from 'uuid'
 
 // alternate way to define arguments
 @InputType()
@@ -190,9 +192,22 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async forgotPassword(
     @Arg('email') email: string,
-    @Ctx() {em, req}: MyContext
+    @Ctx() {em, redis}: MyContext
   ): Promise<boolean> {
-    const user = em.findOne(User, {email})
-    return false
+    const user = await em.findOne(User, {email})
+    if (user === null) {
+      return true
+    }
+
+    const token = v4()
+    await redis.set(FORGOT_PASSWORD_PREFIX + token, user.id, "EX", 360 * 24)
+    await sendEmail(
+      user.email,
+      `<p>Hey</p>
+      <p><a href="http://localhost:3000/forgot-password/${token}">
+        can i ask you for a quick favor?
+      </a></p>`
+    )
+    return true
   }
 }

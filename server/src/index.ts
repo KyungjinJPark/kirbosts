@@ -7,7 +7,7 @@ import { buildSchema } from 'type-graphql'
 import { HelloResolver } from './resolvers/hello'
 import { BostResolver } from './resolvers/bost'
 import { UserResolver } from './resolvers/user'
-import { createClient } from "redis"
+import Redis from 'ioredis'
 import connectRedis from 'connect-redis' // if types are not included, this will be red squigglied
 import session from "express-session"
 import { COOKIE_NAME, __prod__ } from './constants'
@@ -16,8 +16,7 @@ import cors from 'cors'
 
 const main = async () => {
   // =============== Redis set-up ===============
-  const redisClient = createClient({ legacyMode: true })
-  redisClient.connect().catch(console.error)
+  const redis = new Redis()
   const RedisStore = connectRedis(session)
 
   // =============== MikroORM set-up ===============
@@ -48,7 +47,7 @@ const main = async () => {
       validate: false,
     }),
     context: ({req, res}): MyContext => {
-      return ({em: orm.em, req, res})
+      return ({em: orm.em, redis, req, res})
     }
   })
   await apolloServer.start()
@@ -57,7 +56,7 @@ const main = async () => {
     session({
       name: COOKIE_NAME, // TODO: i think cookie name
       store: new RedisStore({
-        client: redisClient,
+        client: redis,
         disableTouch: true // TODO: i have no idea what this does
       }),
       cookie: {
