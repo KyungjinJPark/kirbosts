@@ -25,7 +25,7 @@
   - interacts w/ `MikroORM`
 - `Express Sessions` using `Redis` server
 - Password reset w/ `Nodemailer`
-  - interacts w/ `Redis` to make [tokens?]
+  - uses `Redis` to manage [tokens?]
 
 #### Webclient
 

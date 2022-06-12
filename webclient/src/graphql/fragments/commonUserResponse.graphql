@@ -1,0 +1,4 @@
+fragment CommonUserResponse on UserResponse {
+  errors {...CommonFieldError}
+  user {...CommonUser}
+}

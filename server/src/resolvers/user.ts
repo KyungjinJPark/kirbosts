@@ -210,4 +210,55 @@ export class UserResolver {
     )
     return true
   }
+
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg('token') token: string,
+    @Arg('newPassword') newPassword: string,
+    @Arg('retypedPassword') retypedPassword: string,
+    @Ctx() {em, redis, req}: MyContext
+  ): Promise<UserResponse> {
+    const completeToken = FORGOT_PASSWORD_PREFIX + token;
+    const userId = await redis.get(completeToken) 
+    if (userId === null) {
+      return {
+        errors: [{
+          field: 'token',
+          message: 'Token to change the password is invalid.'
+        }]
+      }
+    }
+    if (newPassword !== retypedPassword) {
+      return {
+        errors: [{
+          field: 'retypedPassword',
+          message: 'Passwords must match.'
+        }]
+      }
+    }
+    if (newPassword.length < 8) {
+      return {
+        errors: [{
+          field: 'newPassword',
+          message: 'Password must have at least 8 characters.'
+        }]
+      }
+    }
+    // all good
+    const user = await em.findOne(User, {id: parseInt(userId)})
+    if (user === null) {
+      return {
+        errors: [{
+          field: 'token',
+          message: 'User associated with this token no longer exists.'
+        }]
+      }
+    }
+    user.password = await argon2.hash(newPassword)
+    await em.persistAndFlush(user) // TODO: why doesn't this throw a duplicate user error
+    // Store `UserId` in the session storage
+    redis.del(completeToken)
+    req.session.userId = user.id
+    return {user}
+  }
 }

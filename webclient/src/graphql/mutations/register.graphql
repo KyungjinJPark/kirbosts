@@ -1,9 +1,5 @@
-mutation Register($options: RegisterInput!) {
+mutation Register($options: RegisterInput!) { # Types match names from definition in server/../resolvers
   register(options: $options) {
-    errors {
-      field
-      message
-    }
-    user {...CommonUser}
+    ...CommonUserResponse
   }
 }

@@ -1,0 +1,4 @@
+fragment CommonFieldError on FieldError {
+  field
+  message
+}

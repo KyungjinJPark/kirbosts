@@ -1,6 +1,6 @@
 import { dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
-import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation } from '../generated/graphql'
+import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation } from '../generated/graphql'
 
 export const createUrqlClient = (ssrExchange) => ({
   url: 'http://localhost:4000/graphql',
@@ -38,6 +38,17 @@ export const createUrqlClient = (ssrExchange) => ({
           logout: (result: LogoutMutation, args, cache, info) => {
             cache.updateQuery({query: MeDocument}, (data: MeQuery): MeQuery  => {
               return {me: null}
+            })
+          },
+          changePassword: (result: ChangePasswordMutation, args, cache, info) => {
+            cache.updateQuery({query: MeDocument}, (data: MeQuery): MeQuery  => { // TODO: very WET code
+              if (result.changePassword.errors) {
+                return data
+              } else {
+                return {
+                  me: result.changePassword.user
+                }
+              }
             })
           },
         },
