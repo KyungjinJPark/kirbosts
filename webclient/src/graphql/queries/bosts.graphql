@@ -1,0 +1,8 @@
+query Bosts {
+  bosts {
+    id
+    createdAt
+    updatedAt
+    title
+  }
+}

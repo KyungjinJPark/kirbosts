@@ -30,6 +30,7 @@
 - `Chakra-ui`
 - `URQL` + `GraphQL client`
 - `GraphQL Code Generator`
+- server side rendering with `next-urql`
 
 ---
 
@@ -68,3 +69,8 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
     - `npm run gen`
     - Use the generated hook to call the mutation
 - Some repeated queries will not return new values because of the urql cache
+- `> organize inputs` to organize inputs
+- Server side rendering is good for SEO
+  - With SSR, fetched data will show up in page source w/o having to evaluate JS
+  - Note: SSR only works for the first page you load. Subsequent pages are routed client-side AND gql requests are performed on the client
+  - Note: you can delay queries based on whether the window variable is set to not SSR things on an SSR page

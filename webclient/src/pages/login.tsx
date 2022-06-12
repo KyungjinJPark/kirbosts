@@ -1,14 +1,16 @@
 import { Box, Button } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
+import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import { InputField } from '../components/InputField'
 import { Wrapper } from '../components/Wrapper'
 import { useLoginMutation } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
+import { createUrqlClient } from "../utils/createUrqlClient"
 
 interface loginProps {}
 
-const login: React.FC<loginProps> = ({}) => {
+const Login: React.FC<loginProps> = ({}) => {
   const router = useRouter()
   const [, login] = useLoginMutation()
 
@@ -50,4 +52,5 @@ const login: React.FC<loginProps> = ({}) => {
   )
 }
 
-export default login
+// ssr off but still need urql client bc there are mutations to call
+export default withUrqlClient(createUrqlClient)(Login)
