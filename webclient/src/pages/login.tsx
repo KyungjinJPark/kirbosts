@@ -1,11 +1,11 @@
-import { Box, Button } from '@chakra-ui/react'
-import { Form, Formik } from 'formik'
-import { withUrqlClient } from 'next-urql'
-import { useRouter } from 'next/router'
-import { InputField } from '../components/InputField'
-import { Wrapper } from '../components/Wrapper'
-import { useLoginMutation } from '../generated/graphql'
-import { toErrorMap } from '../utils/toErrorMap'
+import { Box, Button } from "@chakra-ui/react"
+import { Form, Formik } from "formik"
+import { withUrqlClient } from "next-urql"
+import { useRouter } from "next/router"
+import { InputField } from "../components/InputField"
+import { Wrapper } from "../components/Wrapper"
+import { useLoginMutation } from "../generated/graphql"
+import { toErrorMap } from "../utils/toErrorMap"
 import { createUrqlClient } from "../utils/createUrqlClient"
 
 interface loginProps {}
@@ -17,9 +17,9 @@ const Login: React.FC<loginProps> = ({}) => {
   return (
     <Wrapper variant="small">
       <Formik
-        initialValues={{username: '', password: ''}}
+        initialValues={{emailOrUsername: "", password: ""}}
         onSubmit={async (vals, {setErrors}) => {
-          const response = await login({options: vals})
+          const response = await login(vals)
           const data = response.data?.login
           if (data.errors !== null) {
             setErrors(toErrorMap(data.errors))
@@ -32,19 +32,19 @@ const Login: React.FC<loginProps> = ({}) => {
         {({isSubmitting}) => (
           <Form>
             <InputField
-              name="username"
-              label='username'
-              placeholder='Username'
+              name="emailOrUsername"
+              label="Email or Username"
+              placeholder="Email or Username"
             ></InputField>
             <Box mt={4}>
               <InputField
                 type="password"
                 name="password"
-                label='password'
-                placeholder='Password'
+                label="password"
+                placeholder="Password"
               ></InputField>
             </Box>
-            <Button type="submit" isLoading={isSubmitting} mt={4} colorScheme='teal'>Login</Button>
+            <Button type="submit" isLoading={isSubmitting} mt={4} colorScheme="teal">Login</Button>
           </Form>
         )}
       </Formik>

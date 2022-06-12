@@ -2,11 +2,13 @@ import { MyContext } from '../types';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { User } from '../entities/User';
 import argon2 from 'argon2'
-import { COOKIE_NAME } from '../constants';
+import { COOKIE_NAME, EMAIL_REGEX } from '../constants';
 
 // alternate way to define arguments
 @InputType()
-class UsernamePasswordInput {
+class RegisterInput {
+  @Field()
+  email: string
   @Field()
   username: string
   @Field()
@@ -49,14 +51,30 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options') options: UsernamePasswordInput,
+    @Arg('options') options: RegisterInput,
     @Ctx() {em, req}: MyContext
   ): Promise<UserResponse> {
+    if (!options.email.match(EMAIL_REGEX)) {
+      return {
+        errors: [{
+          field: 'email',
+          message: 'Email must be valid.'
+        }]
+      }
+    }
     if (options.username.length < 3) {
       return {
         errors: [{
           field: 'username',
           message: 'Username must have at least 3 characters.'
+        }]
+      }
+    }
+    if (options.username.match(EMAIL_REGEX)) {
+      return {
+        errors: [{
+          field: 'username',
+          message: 'Username cannot be in email format.'
         }]
       }
     }
@@ -69,7 +87,7 @@ export class UserResolver {
       }
     }
     const hashedPassword = await argon2.hash(options.password)
-    const user = em.create(User, {username: options.username, password: hashedPassword})
+    const user = em.create(User, {email: options.email, username: options.username, password: hashedPassword})
     try {
       /*
       // INSERT USING QUERY BUILDER
@@ -112,21 +130,35 @@ export class UserResolver {
     return {user}
   }
 
-  @Mutation(() => UserResponse) // TODO: should this be a `Query`?
+  @Mutation(() => UserResponse) // should this be a `Query`? No. This mutates the state of redis
   async login(
-    @Arg('options') options: UsernamePasswordInput,
+    @Arg('emailOrUsername') emailOrUsername: string,
+    @Arg('password') password: string,
     @Ctx() {em, req}: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, {username: options.username})
-    if (user === null) {
-      return {
-        errors: [{
-          field: 'username',
-          message: 'Username does not exist.'
-        }]
+    let user
+    if (emailOrUsername.match(EMAIL_REGEX)) {
+      user = await em.findOne(User, {email: emailOrUsername})
+      if (user === null) {
+        return {
+          errors: [{
+            field: 'emailOrUsername',
+            message: 'Email does not exist.'
+          }]
+        }
+      }
+    } else {
+      user = await em.findOne(User, {username: emailOrUsername})
+      if (user === null) {
+        return {
+          errors: [{
+            field: 'emailOrUsername',
+            message: 'Username does not exist.'
+          }]
+        }
       }
     }
-    const valid = await argon2.verify(user.password, options.password)
+    const valid = await argon2.verify(user.password, password)
     if (!valid) {
       return {
         errors: [{
@@ -153,5 +185,14 @@ export class UserResolver {
         res(true)
       }
     }))
+  }
+  
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg('email') email: string,
+    @Ctx() {em, req}: MyContext
+  ): Promise<boolean> {
+    const user = em.findOne(User, {email})
+    return false
   }
 }
