@@ -1,11 +1,16 @@
 # `Kirbosts` 👾
 
-`Kirbosts` is a reddit-like web app created for fullstack CRUD (Create, Read, Update, Delete) app development practice. 
+Amongst the friend group, we share a lot of memes, jokes, and random posts that originate from sites like Reddit and Twitter. I want to make a reddit-like app where we can repost the posts, or `bosts`, for eachother.
+
+In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, Delete) app development practice. 
+
+<!-- 🎉 [Create your own bosts here!](https:// hee hee /) 🎉 -->
 
 ## Features
 
-### Application Features
-<!-- TODO: business-englishify this -->
+<!-- TODO: business-englishify this section -->
+
+## User Features
 
 - Web client
 - CRUD Bosts (Posts)
@@ -13,10 +18,11 @@
 - User sessions
 - Forgot password
 
-### Features for Devs
-<!-- TODO: business-englishify this -->
+## Dev Tech
 
-#### Server
+###### a.k.a. Name Dropping
+
+### Server
 
 - `TypeScript` + watch w/ nodemon
 - `PostgreSQL` server
@@ -27,7 +33,7 @@
 - Password reset w/ `Nodemailer`
   - uses `Redis` to manage [tokens?]
 
-#### Webclient
+### Webclient
 
 - `React` + `Next.js` 
 - `Chakra-ui`
@@ -37,17 +43,17 @@
 
 ---
 
-## Misc
-
-### Etymology
+## Etymology
 
 A certain pink, floaty, ball-like character is the mascot of a discord server I am in. `Kirbosts` is derived from a combination of that character's name and the word "posts".
 
-### Credits
+###### please don't C&D me
+
+## Credits
 
 The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) by [Ben Awad](https://www.youtube.com/c/BenAwad97).
 
-### Learning Notes
+## Learning Notes
 
 - Use `sudo systemctl start postgresql.service` to check if PostgreSQL is runnning
 - WSL doesn't have `systemctl start postgresql.service`, so use `service postgresql start`
