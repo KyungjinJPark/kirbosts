@@ -55,6 +55,8 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
 
 ## Learning Notes
 
+Timestamp: 5:05
+
 - Use `sudo systemctl start postgresql.service` to check if PostgreSQL is runnning
 - WSL doesn't have `systemctl start postgresql.service`, so use `service postgresql start`
   - Database name: `kirbosts`
