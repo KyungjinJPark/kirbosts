@@ -2,7 +2,6 @@ import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Link } fro
 import { Form, Formik } from "formik";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
-import router from "next/router";
 import { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { Wrapper } from "../../components/Wrapper";
@@ -10,8 +9,10 @@ import { useChangePasswordMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrorMap } from "../../utils/toErrorMap";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 
-const ForgotPassword: NextPage<{token: string}> = ({token}) => {
+const ForgotPassword: NextPage = () => {
+  const router = useRouter()
   const [, changePassword] = useChangePasswordMutation()
   const [tokenError, setTokenError] = useState("")
   return (
@@ -38,7 +39,8 @@ const ForgotPassword: NextPage<{token: string}> = ({token}) => {
       <Formik
         initialValues={{newPassword: "", retypedPassword: ""}}
         onSubmit={async (vals, {setErrors}) => {
-          const response = await changePassword({token, ...vals}) // password is passed plaintext across the wire
+          const tokenQuery = typeof router.query.token === "string" ? router.query.token : ""
+          const response = await changePassword({token: tokenQuery, ...vals}) // password is passed plaintext across the wire
           const data = response.data?.changePassword
           if (data.errors !== null) {
             const {token, ...errMap} = toErrorMap(data.errors) as any
@@ -76,8 +78,9 @@ const ForgotPassword: NextPage<{token: string}> = ({token}) => {
 )
 }
 
-ForgotPassword.getInitialProps = ({query}) => {
-  return {token: query.token as string}
-}
+// // removing this makes page static (next optimization)
+// ForgotPassword.getInitialProps = ({query}) => {
+//   return {token: query.token as string}
+// }
 
-export default withUrqlClient(createUrqlClient, {ssr: false /* may bautomatically `true` when `getInitialProps` is used */})(ForgotPassword)
+export default withUrqlClient(createUrqlClient, {ssr: false /* may b automatically `true` when `getInitialProps` is used */})(ForgotPassword)
