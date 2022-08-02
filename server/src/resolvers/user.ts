@@ -180,10 +180,10 @@ export class UserResolver {
     res.clearCookie(COOKIE_NAME)
     return new Promise(res => req.session.destroy(err => {
       if (err === null || err === undefined) {
+        res(true)
+      } else {
         console.log(err)
         res(false)
-      } else {
-        res(true)
       }
     }))
   }
