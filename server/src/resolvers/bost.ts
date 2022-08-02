@@ -1,6 +1,7 @@
 import { MyContext } from 'src/types';
 import { Bost } from '../entities/Bost';
-import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
+import { isAuth } from '../middleware/isAuth';
 
 @InputType()
 class BostInput {
@@ -14,14 +15,12 @@ class BostInput {
 export class BostResolver { 
   // =============== CREATE ===============
   @Mutation(() => Bost)
+  @UseMiddleware(isAuth)
   async createBost(
     @Arg('input') input: BostInput,
     @Ctx() {req}: MyContext
   ): Promise<Bost> {
-    if (req.session.userId) {
-      return Bost.create({...input, creatorId: req.session.userId }).save()
-    }
-    throw new Error("User is not logged in.");
+    return Bost.create({...input, creatorId: req.session.userId }).save()
   }
 
   // =============== READ ===============

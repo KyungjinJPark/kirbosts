@@ -14,6 +14,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 
 - Web client
 - CRUD Bosts (Posts)
+  - Kirbs (Votes)
 - User accounts
 - User sessions
 - Forgot password
@@ -26,9 +27,9 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 
 - `TypeScript` + watch w/ nodemon
 - `PostgreSQL` server
-- `MikroORM`
+- `TypeORM`
 - `Express` + `Apollo` + `GraphQL API`
-  - interacts w/ `MikroORM`
+  - interacts w/ `TypeORM`
 - `Express Sessions` using `Redis` server
 - Password reset w/ `Nodemailer`
   - uses `Redis` to manage [tokens?]
@@ -40,6 +41,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - `URQL` + `GraphQL client`
 - `GraphQL Code Generator`
 - server side rendering with `next-urql`
+- resolvers use middleware for PEP
 
 ---
 
@@ -55,12 +57,12 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
 
 ## Learning Notes
 
-Timestamp: 5:05
+Timestamp: 6:00
 
 - Use `sudo systemctl start postgresql.service` to check if PostgreSQL is runnning
 - WSL doesn't have `systemctl start postgresql.service`, so use `service postgresql start`
   - Database name: `kirbosts`
-- When using MikroORM, put all new `entity`s in the init and make a new entity definition file
+- When using TypeORM, put all new `entity`s in the init and make a new entity definition file
 - This does not automatically create the entity table in PostgreSQL
   - Use CLI to create migrations. Then add code to run migration in `main`
 - Sometimes, Apollo resolvers need access to `ORM`
