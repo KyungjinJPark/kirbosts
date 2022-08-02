@@ -1,6 +1,6 @@
 import 'reflect-metadata'
-import { MikroORM } from '@mikro-orm/core'
-import mikroOrmConfig from './mikro-orm.config'
+import typeOrmConfig from './type-orm.config'
+import { DataSource } from "typeorm";
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
@@ -19,11 +19,15 @@ const main = async () => {
   const redis = new Redis()
   const RedisStore = connectRedis(session)
 
-  // =============== MikroORM set-up ===============
-  const orm = await MikroORM.init(mikroOrmConfig)
-  orm.getMigrator().up()
+  // =============== TypeORM set-up ===============
+  const ds = new DataSource(typeOrmConfig)
+  ds.initialize()
+  .then(() => {
+      // here you can start to work with your database
+  })
+  .catch((error) => console.log(error))
 
-  // =============== MikroORM examples ===============
+  // =============== old MikroORM examples ===============
   // const bost = orm.em.create(Bost, {title: 'test bost'}) // NOT auto-added to db
   // await orm.em.persistAndFlush(bost) // pushed to DB
   // // BUT, the streamlined method...
@@ -47,7 +51,7 @@ const main = async () => {
       validate: false,
     }),
     context: ({req, res}): MyContext => {
-      return ({em: orm.em, redis, req, res})
+      return ({redis, req, res})
     }
   })
   await apolloServer.start()

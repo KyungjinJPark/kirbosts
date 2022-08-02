@@ -39,7 +39,7 @@ class FieldError {
 export class UserResolver { 
   @Query(() => User, {nullable: true})
   async me(
-    @Ctx() {em, req}: MyContext
+    @Ctx() {req}: MyContext
   ) {
     // not logged in
     const userId = req.session.userId
@@ -47,14 +47,13 @@ export class UserResolver {
       return null
     }
     
-    const user = await em.findOne(User, {id: userId})
-    return user
+    return User.findOneBy({id: userId})
   }
 
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: RegisterInput,
-    @Ctx() {em, req}: MyContext
+    @Ctx() {req}: MyContext
   ): Promise<UserResponse> {
     if (!options.email.match(EMAIL_REGEX)) {
       return {
@@ -89,10 +88,11 @@ export class UserResolver {
       }
     }
     const hashedPassword = await argon2.hash(options.password)
-    const user = em.create(User, {email: options.email, username: options.username, password: hashedPassword})
+    let user
     try {
+      user = await User.create({email: options.email, username: options.username, password: hashedPassword}).save()
       /*
-      // INSERT USING QUERY BUILDER
+      // INSERT USING QUERY BUILDER (for MikroORM)
       const result = await (em as EntityManager) // From mikroORM/psql
         .createQueryBuilder(User)
         .getKnexQuery()
@@ -105,7 +105,6 @@ export class UserResolver {
         .returning("*") grab all columns
       user = result[0]
       */
-      await em.persistAndFlush(user)
     } catch (err) {
       // Username already taken
       switch (err.code) {
@@ -136,11 +135,11 @@ export class UserResolver {
   async login(
     @Arg('emailOrUsername') emailOrUsername: string,
     @Arg('password') password: string,
-    @Ctx() {em, req}: MyContext
+    @Ctx() {req}: MyContext
   ): Promise<UserResponse> {
     let user
     if (emailOrUsername.match(EMAIL_REGEX)) {
-      user = await em.findOne(User, {email: emailOrUsername})
+      user = await User.findOneBy({email: emailOrUsername})
       if (user === null) {
         return {
           errors: [{
@@ -150,7 +149,7 @@ export class UserResolver {
         }
       }
     } else {
-      user = await em.findOne(User, {username: emailOrUsername})
+      user = await User.findOneBy({username: emailOrUsername})
       if (user === null) {
         return {
           errors: [{
@@ -192,9 +191,9 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async forgotPassword(
     @Arg('email') email: string,
-    @Ctx() {em, redis}: MyContext
+    @Ctx() {redis}: MyContext
   ): Promise<boolean> {
-    const user = await em.findOne(User, {email})
+    const user = await User.findOneBy({email})
     if (user === null) {
       return true
     }
@@ -216,7 +215,7 @@ export class UserResolver {
     @Arg('token') token: string,
     @Arg('newPassword') newPassword: string,
     @Arg('retypedPassword') retypedPassword: string,
-    @Ctx() {em, redis, req}: MyContext
+    @Ctx() {redis, req}: MyContext
   ): Promise<UserResponse> {
     const completeToken = FORGOT_PASSWORD_PREFIX + token;
     const userId = await redis.get(completeToken) 
@@ -245,7 +244,8 @@ export class UserResolver {
       }
     }
     // all good
-    const user = await em.findOne(User, {id: parseInt(userId)})
+    const parsedUserId = parseInt(userId)
+    const user = await User.findOneBy({id: parsedUserId})
     if (user === null) {
       return {
         errors: [{
@@ -254,8 +254,7 @@ export class UserResolver {
         }]
       }
     }
-    user.password = await argon2.hash(newPassword)
-    await em.persistAndFlush(user) // TODO: why doesn't this throw a duplicate user error
+    await User.update({id: parsedUserId}, {password: await argon2.hash(newPassword)})
     // Store `UserId` in the session storage
     redis.del(completeToken)
     req.session.userId = user.id

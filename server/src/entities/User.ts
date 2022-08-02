@@ -1,32 +1,32 @@
-import { Entity, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core'
 import { ObjectType, Field, Int } from 'type-graphql'
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 @ObjectType()
 @Entity()
-export class User {
-  [OptionalProps]?: 'createdAt' | 'updatedAt'
+export class User extends BaseEntity {
+  // [OptionalProps]?: 'createdAt' | 'updatedAt'
 
   @Field(() => Int)
-  @PrimaryKey()
+  @PrimaryGeneratedColumn()
   id!: number
 
   @Field()
-  @Property()
-  createdAt: Date = new Date()
+  @CreateDateColumn()
+  createdAt: Date
 
   @Field()
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date()
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @Field()
-  @Property({type: 'text', unique: true})
+  @Column({type: 'text', unique: true})
   email!: string
 
   @Field()
-  @Property({type: 'text', unique: true})
+  @Column({type: 'text', unique: true})
   username!: string
 
   // removing `@Field` bc I don't want ppl querying other ppl's passwords
-  @Property({type: 'text'})
+  @Column({type: 'text'})
   password!: string
 }
