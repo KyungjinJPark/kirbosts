@@ -6,12 +6,14 @@ import { InputField } from "../components/InputField"
 import { Layout } from "../components/Layout"
 import { useCreateBostMutation } from "../generated/graphql"
 import { createUrqlClient } from "../utils/createUrqlClient"
+import { useIsAuth } from "../utils/useIsAuth"
 // import { toErrorMap } from "../utils/toErrorMap"
 
 interface createBostProps {}
 
 const CreateBost: React.FC<createBostProps> = ({}) => {
   const router = useRouter()
+  useIsAuth()
   const [, createBost] = useCreateBostMutation()
 
   return (
