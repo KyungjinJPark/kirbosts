@@ -20,9 +20,17 @@ export type Scalars = {
 export type Bost = {
   __typename?: 'Bost';
   createdAt: Scalars['DateTime'];
+  creatorId: Scalars['Float'];
   id: Scalars['Int'];
+  kirbs: Scalars['Float'];
+  text: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+};
+
+export type BostInput = {
+  text: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type FieldError = {
@@ -52,7 +60,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreateBostArgs = {
-  title: Scalars['String'];
+  input: BostInput;
 };
 
 
@@ -131,6 +139,13 @@ export type ChangePasswordMutationVariables = Exact<{
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, username: string } | null } };
 
+export type CreateBostMutationVariables = Exact<{
+  input: BostInput;
+}>;
+
+
+export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any } };
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -205,6 +220,22 @@ export const ChangePasswordDocument = gql`
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const CreateBostDocument = gql`
+    mutation CreateBost($input: BostInput!) {
+  createBost(input: $input) {
+    id
+    title
+    text
+    creatorId
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCreateBostMutation() {
+  return Urql.useMutation<CreateBostMutation, CreateBostMutationVariables>(CreateBostDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {

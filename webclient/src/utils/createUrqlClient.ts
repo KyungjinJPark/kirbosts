@@ -2,6 +2,25 @@ import { dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
 import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation } from '../generated/graphql'
 
+// BEGIN global error handling
+import { pipe, tap } from 'wonka'
+import { Exchange } from 'urql'
+import Router from 'next/router'
+
+const errorExchange: Exchange = ({forward}) => ops$ => {
+  return pipe(
+    forward(ops$),
+    tap(({error}) => {
+      if (error) {
+        if (error.message.includes('not logged in')) {
+          Router.replace("/login") // replace: more for redirects
+        }
+      }
+    })
+  )
+}
+// END global error handling
+
 export const createUrqlClient = (ssrExchange) => ({
   url: 'http://localhost:4000/graphql',
   fetchOptions: {
@@ -55,5 +74,7 @@ export const createUrqlClient = (ssrExchange) => ({
       },
     }),
     ssrExchange,
-    fetchExchange]
+    errorExchange,
+    fetchExchange,
+  ]
 })

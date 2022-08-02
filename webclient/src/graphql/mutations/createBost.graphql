@@ -1,0 +1,10 @@
+mutation CreateBost($input: BostInput!) {
+  createBost(input: $input) {
+    id
+    title
+    text
+    creatorId
+    createdAt
+    updatedAt
+  }
+}
