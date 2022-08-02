@@ -7,7 +7,7 @@ export const useIsAuth = () => { //TODO: is this a security vulnerability?
   const [{data, fetching}] = useMeQuery()
   useEffect(() => { // go to login if not logged in
     if (!fetching && !data.me) {
-      router.replace("/login")
+      router.replace(`/login?next=${router.pathname}`)
     }
   }, [data, fetching, router])
 }
