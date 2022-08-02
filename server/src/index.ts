@@ -13,6 +13,7 @@ import session from "express-session"
 import { COOKIE_NAME, __prod__ } from './constants'
 import { MyContext } from './types'
 import cors from 'cors'
+// import { Bost } from './entities/Bost';
 
 const main = async () => {
   // =============== Redis set-up ===============
@@ -23,7 +24,8 @@ const main = async () => {
   const ds = new DataSource(typeOrmConfig)
   ds.initialize()
   .then(() => {
-      // here you can start to work with your database
+    // // here you can start to work with your database
+    // Bost.delete({})
   })
   .catch((error) => console.log(error))
 
