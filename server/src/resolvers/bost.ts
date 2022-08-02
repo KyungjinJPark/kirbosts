@@ -1,15 +1,27 @@
+import { MyContext } from 'src/types';
 import { Bost } from '../entities/Bost';
-import { Arg, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
+
+@InputType()
+class BostInput {
+  @Field()
+  title: string
+  @Field()
+  text: string
+}
 
 @Resolver()
 export class BostResolver { 
   // =============== CREATE ===============
   @Mutation(() => Bost)
   async createBost(
-    @Arg('title') title: string,
+    @Arg('input') input: BostInput,
+    @Ctx() {req}: MyContext
   ): Promise<Bost> {
-    // probably 2 SQL queries
-    return Bost.create({title}).save()
+    if (req.session.userId) {
+      return Bost.create({...input, creatorId: req.session.userId }).save()
+    }
+    throw new Error("User is not logged in.");
   }
 
   // =============== READ ===============

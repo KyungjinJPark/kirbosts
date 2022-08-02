@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from 'type-graphql'
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Bost } from './Bost'
 
 @ObjectType()
 @Entity()
@@ -9,14 +10,6 @@ export class User extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number
-
-  @Field()
-  @CreateDateColumn()
-  createdAt: Date
-
-  @Field()
-  @UpdateDateColumn()
-  updatedAt: Date
 
   @Field()
   @Column({type: 'text', unique: true})
@@ -29,4 +22,15 @@ export class User extends BaseEntity {
   // removing `@Field` bc I don't want ppl querying other ppl's passwords
   @Column({type: 'text'})
   password!: string
+
+  @OneToMany(() => Bost, (bost) => bost.creator)
+  bosts: Bost[]
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date
 }
