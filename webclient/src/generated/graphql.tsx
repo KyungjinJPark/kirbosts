@@ -103,6 +103,12 @@ export type QueryBostArgs = {
   id: Scalars['Int'];
 };
 
+
+export type QueryBostsArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
 export type RegisterInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -173,10 +179,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, username: string } | null } };
 
-export type BostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type BostsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: InputMaybe<Scalars['String']>;
+}>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: Array<{ __typename?: 'Bost', id: number, createdAt: any, updatedAt: any, title: string }> };
+export type BostsQuery = { __typename?: 'Query', bosts: Array<{ __typename?: 'Bost', id: number, title: string, text: string, createdAt: any, updatedAt: any }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -278,17 +287,18 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const BostsDocument = gql`
-    query Bosts {
-  bosts {
+    query Bosts($limit: Int!, $cursor: String) {
+  bosts(limit: $limit, cursor: $cursor) {
     id
+    title
+    text
     createdAt
     updatedAt
-    title
   }
 }
     `;
 
-export function useBostsQuery(options?: Omit<Urql.UseQueryArgs<BostsQueryVariables>, 'query'>) {
+export function useBostsQuery(options: Omit<Urql.UseQueryArgs<BostsQueryVariables>, 'query'>) {
   return Urql.useQuery<BostsQuery>({ query: BostsDocument, ...options });
 };
 export const MeDocument = gql`

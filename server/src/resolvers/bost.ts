@@ -25,8 +25,19 @@ export class BostResolver {
 
   // =============== READ ===============
   @Query(() => [Bost]) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
-  bosts(): Promise<Bost[]> { // duplicate typing necessary
-    return Bost.find()
+  bosts(
+    @Arg('limit', () => Int) limit: number,
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
+  ): Promise<Bost[]> { // duplicate typing necessary
+    const count = Math.min(limit, 10)
+    const qb = Bost
+      .createQueryBuilder('b')
+      .orderBy('"createdAt"', 'DESC')
+      .take(count)
+    if (cursor) {
+      qb.where('"createdAt" < :cursor', { cursor: new Date(cursor) })
+    }
+    return qb.getMany()
   }
 
   @Query(() => Bost /* can't to `| null` */, {nullable: true})

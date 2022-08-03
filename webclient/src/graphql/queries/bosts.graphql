@@ -1,8 +1,9 @@
-query Bosts {
-  bosts {
+query Bosts($limit: Int!, $cursor: String) {
+  bosts(limit: $limit, cursor: $cursor) {
     id
+    title
+    text
     createdAt
     updatedAt
-    title
   }
 }

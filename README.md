@@ -33,6 +33,8 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - `Express Sessions` using `Redis` server
 - Password reset w/ `Nodemailer`
   - uses `Redis` to manage [tokens?]
+- resolvers use middleware for PEP
+- cursor-based bost pagination
 
 ### Webclient
 
@@ -41,7 +43,6 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - `URQL` + `GraphQL client`
 - `GraphQL Code Generator`
 - server side rendering with `next-urql`
-- resolvers use middleware for PEP
 
 ---
 
@@ -57,7 +58,7 @@ The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) b
 
 ## Learning Notes
 
-Timestamp: 6:00
+Timestamp: 6:32
 
 - Use `sudo systemctl start postgresql.service` to check if PostgreSQL is runnning
 - WSL doesn't have `systemctl start postgresql.service`, so use `service postgresql start`

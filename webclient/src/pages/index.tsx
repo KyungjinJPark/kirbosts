@@ -6,7 +6,7 @@ import { createUrqlClient } from "../utils/createUrqlClient"
 import NextLink from "next/link";
 
 const Index = () => {
-  const [{data}] = useBostsQuery()
+  const [{data}] = useBostsQuery({variables: {limit: 2}})
 
   return (
     <Layout>
