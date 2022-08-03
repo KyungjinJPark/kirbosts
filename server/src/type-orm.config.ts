@@ -1,15 +1,10 @@
 import { DataSource } from "typeorm";
-// import path from 'path';
+import path from 'path';
 import { __prod__ } from './constants';
 import { Bost } from './entities/Bost';
 import { User } from './entities/User';
 
 export default {
-  // migrations: {
-  //   path: path.join(__dirname, './migrations'),
-  //   pathTs: path.join(__dirname, './migrations'),
-  //   glob: '!(*.d).{js,ts}',
-  // },
   // allowGlobalContext: true,
   type: "postgres",
   host: "localhost",
@@ -20,5 +15,5 @@ export default {
   logging: true,
   synchronize: !__prod__,
   entities: [Bost, User],
-
+  migrations: [path.join(__dirname, './migrations/*')]
 } as ConstructorParameters<typeof DataSource>[0]

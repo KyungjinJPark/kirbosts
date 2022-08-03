@@ -22,12 +22,13 @@ const main = async () => {
 
   // =============== TypeORM set-up ===============
   const ds = new DataSource(typeOrmConfig)
-  ds.initialize()
+  await ds.initialize()
   .then(() => {
     // // here you can start to work with your database
     // Bost.delete({})
   })
   .catch((error) => console.log(error))
+  ds.runMigrations();
 
   // =============== old MikroORM examples ===============
   // const bost = orm.em.create(Bost, {title: 'test bost'}) // NOT auto-added to db
