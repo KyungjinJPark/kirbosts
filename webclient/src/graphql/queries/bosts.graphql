@@ -2,7 +2,7 @@ query Bosts($limit: Int!, $cursor: String) {
   bosts(limit: $limit, cursor: $cursor) {
     id
     title
-    text
+    textSnippet
     createdAt
     updatedAt
   }

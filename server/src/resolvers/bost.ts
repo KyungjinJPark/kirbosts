@@ -1,6 +1,6 @@
 import { MyContext } from 'src/types';
 import { Bost } from '../entities/Bost';
-import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
+import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, Query, Resolver, Root, UseMiddleware } from 'type-graphql';
 import { isAuth } from '../middleware/isAuth';
 
 @InputType()
@@ -11,7 +11,7 @@ class BostInput {
   text: string
 }
 
-@Resolver()
+@Resolver(Bost)
 export class BostResolver { 
   // =============== CREATE ===============
   @Mutation(() => Bost)
@@ -24,6 +24,13 @@ export class BostResolver {
   }
 
   // =============== READ ===============
+  @FieldResolver(() => String) // GQL computed field
+  textSnippet(
+    @Root() root: Bost
+  ) {
+    return root.text.slice(0, 80)
+  }
+  
   @Query(() => [Bost]) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
   bosts(
     @Arg('limit', () => Int) limit: number,

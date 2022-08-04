@@ -35,6 +35,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
   - uses `Redis` to manage [tokens?]
 - resolvers use middleware for PEP
 - cursor-based bost pagination
+- field resolvers to compute GQL data on the fly
 
 ### Webclient
 

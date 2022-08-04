@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react"
+import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react"
 import { withUrqlClient } from "next-urql"
 import { Layout } from "../components/Layout"
 import { useBostsQuery } from "../generated/graphql"
@@ -10,14 +10,23 @@ const Index = () => {
 
   return (
     <Layout>
-      <div>hello world!</div>
-      <NextLink href="/create-bost"><Link>Create a bost</Link></NextLink>
+      <Flex align="center">
+        <Heading>Kirbosts</Heading>
+        <NextLink href="/create-bost"><Link ml="auto">Create a Bost</Link></NextLink>
+      </Flex>
       <br />
       {!data
         ? <div>loading...</div>
-        : data.bosts.map((bost) => {
-          return <div key={bost.id}>{bost.title}</div>
-        })
+        : <Stack spacing={8}>
+          {data.bosts.map((bost) => {
+            return <Box key={bost.id} p={5} shadow="md" borderWidth="1px">
+              <Heading fontSize="xl">{bost.title}</Heading>
+              <Text mt={4}>{
+                bost.textSnippet
+              }</Text>
+            </Box>
+          })}
+        </Stack>
       }
     </Layout>
   )

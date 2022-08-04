@@ -24,6 +24,7 @@ export type Bost = {
   id: Scalars['Int'];
   kirbs: Scalars['Float'];
   text: Scalars['String'];
+  textSnippet: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -185,7 +186,7 @@ export type BostsQueryVariables = Exact<{
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: Array<{ __typename?: 'Bost', id: number, title: string, text: string, createdAt: any, updatedAt: any }> };
+export type BostsQuery = { __typename?: 'Query', bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, createdAt: any, updatedAt: any }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -291,7 +292,7 @@ export const BostsDocument = gql`
   bosts(limit: $limit, cursor: $cursor) {
     id
     title
-    text
+    textSnippet
     createdAt
     updatedAt
   }
