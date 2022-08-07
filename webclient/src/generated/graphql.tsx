@@ -91,10 +91,16 @@ export type MutationUpdateBostArgs = {
   title: Scalars['String'];
 };
 
+export type PaginatedBosts = {
+  __typename?: 'PaginatedBosts';
+  bosts: Array<Bost>;
+  hasMore: Scalars['Boolean'];
+};
+
 export type Query = {
   __typename?: 'Query';
   bost?: Maybe<Bost>;
-  bosts: Array<Bost>;
+  bosts: PaginatedBosts;
   hello: Scalars['String'];
   me?: Maybe<User>;
 };
@@ -186,7 +192,7 @@ export type BostsQueryVariables = Exact<{
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, createdAt: any, updatedAt: any }> };
+export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, createdAt: any, updatedAt: any }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -290,11 +296,14 @@ export function useRegisterMutation() {
 export const BostsDocument = gql`
     query Bosts($limit: Int!, $cursor: String) {
   bosts(limit: $limit, cursor: $cursor) {
-    id
-    title
-    textSnippet
-    createdAt
-    updatedAt
+    bosts {
+      id
+      title
+      textSnippet
+      createdAt
+      updatedAt
+    }
+    hasMore
   }
 }
     `;

@@ -1,6 +1,6 @@
 import { MyContext } from 'src/types';
 import { Bost } from '../entities/Bost';
-import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, Query, Resolver, Root, UseMiddleware } from 'type-graphql';
+import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from 'type-graphql';
 import { isAuth } from '../middleware/isAuth';
 
 @InputType()
@@ -9,6 +9,14 @@ class BostInput {
   title: string
   @Field()
   text: string
+}
+
+@ObjectType()
+class PaginatedBosts {
+  @Field(() => [Bost])
+  bosts: Bost[]
+  @Field(() => Boolean)
+  hasMore: boolean
 }
 
 @Resolver(Bost)
@@ -31,20 +39,24 @@ export class BostResolver {
     return root.text.slice(0, 80)
   }
   
-  @Query(() => [Bost]) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
-  bosts(
+  @Query(() => PaginatedBosts) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
+  async bosts(
     @Arg('limit', () => Int) limit: number,
     @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
-  ): Promise<Bost[]> { // duplicate typing necessary
+  ): Promise<PaginatedBosts> { // duplicate typing necessary
     const count = Math.min(limit, 10)
+    const countExtra = count + 1
+
     const qb = Bost
       .createQueryBuilder('b')
       .orderBy('"createdAt"', 'DESC')
-      .take(count)
+      .take(countExtra)
     if (cursor) {
       qb.where('"createdAt" < :cursor', { cursor: new Date(cursor) })
     }
-    return qb.getMany()
+
+    const bosts = await qb.getMany()
+    return {bosts: bosts.slice(0, count), hasMore: bosts.length === countExtra}
   }
 
   @Query(() => Bost /* can't to `| null` */, {nullable: true})

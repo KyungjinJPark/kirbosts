@@ -1,12 +1,18 @@
-import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Link, others, Stack, Text } from "@chakra-ui/react"
 import { withUrqlClient } from "next-urql"
 import { Layout } from "../components/Layout"
 import { useBostsQuery } from "../generated/graphql"
 import { createUrqlClient } from "../utils/createUrqlClient"
 import NextLink from "next/link";
+import { useState } from "react"
 
 const Index = () => {
-  const [{data}] = useBostsQuery({variables: {limit: 2}})
+  const [variables, setVariables] = useState({limit: 10, cursor: null as string});
+  const [{data, fetching, ...other}] = useBostsQuery({variables})
+
+  if (!fetching && !data) {
+    return <div>Bosts failed to load</div> 
+  }
 
   return (
     <Layout>
@@ -15,10 +21,10 @@ const Index = () => {
         <NextLink href="/create-bost"><Link ml="auto">Create a Bost</Link></NextLink>
       </Flex>
       <br />
-      {!data
+      {fetching && !data
         ? <div>loading...</div>
         : <Stack spacing={8}>
-          {data.bosts.map((bost) => {
+          {data.bosts.bosts.map((bost) => {
             return <Box key={bost.id} p={5} shadow="md" borderWidth="1px">
               <Heading fontSize="xl">{bost.title}</Heading>
               <Text mt={4}>{
@@ -28,6 +34,21 @@ const Index = () => {
           })}
         </Stack>
       }
+      {data && data.bosts.hasMore
+        ? <Flex>
+          <Button
+            onClick={() => {
+              setVariables({
+                limit: variables.limit,
+                cursor: data.bosts.bosts[data.bosts.bosts.length - 1].createdAt
+              })
+            }}
+            isLoading={fetching}
+            m="auto"
+            my={8}
+          >Load more</Button>
+        </Flex>
+        : undefined}
     </Layout>
   )
 }

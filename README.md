@@ -14,6 +14,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 
 - Web client
 - CRUD Bosts (Posts)
+  - incremental fetching
   - Kirbs (Votes)
 - User accounts
 - User sessions
@@ -56,6 +57,13 @@ A certain pink, floaty, ball-like character is the mascot of a discord server I 
 ## Credits
 
 The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) by [Ben Awad](https://www.youtube.com/c/BenAwad97).
+
+## Considerations
+
+Cursor based pagination
+
+- only works with timestamp cursors ordered by createdAt
+- will skip over bosts if the cursor is set to a timestamp that happens to be equivalent to that of a bost that hasn't been queried. 
 
 ## Learning Notes
 
