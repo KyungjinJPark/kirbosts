@@ -36,7 +36,7 @@ export class BostResolver {
   textSnippet(
     @Root() root: Bost
   ) {
-    return root.text.slice(0, 80)
+    return root.text.slice(0, 80) + (root.text.length > 80 && "...")
   }
   
   @Query(() => PaginatedBosts) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
@@ -49,10 +49,15 @@ export class BostResolver {
 
     const qb = Bost
       .createQueryBuilder('b')
-      .orderBy('"createdAt"', 'DESC')
+      .innerJoinAndSelect( // this get called even if creator is not fetched
+        'b.creator',
+        'u', // user alias
+        'u.id = b.creatorId' //? since 'creator isn't used, this is required
+      )
+      .orderBy('b.createdAt', 'DESC') // doesn't work with "s around createdAt
       .take(countExtra)
     if (cursor) {
-      qb.where('"createdAt" < :cursor', { cursor: new Date(cursor) })
+      qb.where('b."createdAt" < :cursor', { cursor: new Date(cursor) })
     }
 
     const bosts = await qb.getMany()

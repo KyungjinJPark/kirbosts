@@ -9,7 +9,7 @@ export class Bost extends BaseEntity {
 
   @Field(() => Int /* `Int` is from TypeGQL... */) // TypeGQL decorator
   @PrimaryGeneratedColumn() // TypeORM decorator
-  id!: number // !: required
+  id!: number // the ! means required
 
   @Field()
   @Column('text') // default is already 'text'
@@ -27,6 +27,9 @@ export class Bost extends BaseEntity {
   @Column()
   creatorId!: number
 
+  //? I don't think this actually does anything rn b/c when mutation createBost
+  //? is called, creator isn't passed in
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.bosts)
   creator: User
 
