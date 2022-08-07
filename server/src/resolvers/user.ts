@@ -1,5 +1,5 @@
 import { MyContext } from '../types';
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, Root } from 'type-graphql';
 import { User } from '../entities/User';
 import argon2 from 'argon2'
 import { COOKIE_NAME, EMAIL_REGEX, FORGOT_PASSWORD_PREFIX } from '../constants';
@@ -35,8 +35,19 @@ class FieldError {
 }
 
 // TODO: user IDs increment even on failed register attempts
-@Resolver()
-export class UserResolver { 
+@Resolver(User)
+export class UserResolver {
+  @FieldResolver(() => String)
+  email(
+    @Root() root: User,
+    @Ctx() {req}: MyContext,
+  ) {
+    if (req.session.userId === root.id) {
+      return root.email
+    }
+    return "👻"
+  }
+
   @Query(() => User, {nullable: true})
   async me(
     @Ctx() {req}: MyContext
