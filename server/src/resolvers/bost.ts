@@ -57,7 +57,7 @@ export class BostResolver {
   textSnippet(
     @Root() root: Bost
   ) {
-    return root.text.slice(0, 80) + (root.text.length > 80 && "...")
+    return root.text.slice(0, 80) + (root.text.length > 80 ? "..." : "")
   }
   
   @Query(() => PaginatedBosts) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
