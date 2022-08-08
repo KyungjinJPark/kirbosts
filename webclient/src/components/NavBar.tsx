@@ -6,7 +6,7 @@ import { isServer } from "../utils/isServer"
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
-  const [{data, fetching}] = useMeQuery({pause: isServer()}) // doesn't return useful data when SSR
+  const [{data, fetching}] = useMeQuery()
   const [{fetching: logoutFetching}, logout] = useLogoutMutation()
 
   let body = null
