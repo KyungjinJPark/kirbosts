@@ -1,0 +1,12 @@
+fragment BostSnippet on Bost {
+  id
+  title
+  textSnippet
+  kirbCount
+  createdAt
+  updatedAt
+  creator {
+    id
+    username
+  }
+}

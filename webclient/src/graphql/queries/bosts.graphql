@@ -1,15 +1,7 @@
 query Bosts($limit: Int!, $cursor: String) {
   bosts(limit: $limit, cursor: $cursor) {
     bosts {
-      id
-      title
-      textSnippet
-      createdAt
-      updatedAt
-      creator {
-        id
-        username
-      }
+      ...BostSnippet
     }
     hasMore
   }

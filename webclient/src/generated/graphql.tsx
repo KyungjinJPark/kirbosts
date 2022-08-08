@@ -145,6 +145,8 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
+export type BostSnippetFragment = { __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } };
+
 export type CommonFieldErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
 export type CommonUserFragment = { __typename?: 'User', id: number, username: string };
@@ -194,19 +196,41 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, username: string } | null } };
 
+export type VoteMutationVariables = Exact<{
+  value: Scalars['Int'];
+  bostId: Scalars['Int'];
+}>;
+
+
+export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
+
 export type BostsQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
+export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string } | null };
 
+export const BostSnippetFragmentDoc = gql`
+    fragment BostSnippet on Bost {
+  id
+  title
+  textSnippet
+  kirbCount
+  createdAt
+  updatedAt
+  creator {
+    id
+    username
+  }
+}
+    `;
 export const CommonFieldErrorFragmentDoc = gql`
     fragment CommonFieldError on FieldError {
   field
@@ -301,24 +325,25 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const VoteDocument = gql`
+    mutation Vote($value: Int!, $bostId: Int!) {
+  vote(value: $value, bostId: $bostId)
+}
+    `;
+
+export function useVoteMutation() {
+  return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
 export const BostsDocument = gql`
     query Bosts($limit: Int!, $cursor: String) {
   bosts(limit: $limit, cursor: $cursor) {
     bosts {
-      id
-      title
-      textSnippet
-      createdAt
-      updatedAt
-      creator {
-        id
-        username
-      }
+      ...BostSnippet
     }
     hasMore
   }
 }
-    `;
+    ${BostSnippetFragmentDoc}`;
 
 export function useBostsQuery(options: Omit<Urql.UseQueryArgs<BostsQueryVariables>, 'query'>) {
   return Urql.useQuery<BostsQuery>({ query: BostsDocument, ...options });
