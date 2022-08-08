@@ -20,9 +20,10 @@ export type Scalars = {
 export type Bost = {
   __typename?: 'Bost';
   createdAt: Scalars['DateTime'];
-  creatorId: Scalars['Float'];
+  creator: User;
+  creatorId: Scalars['Int'];
   id: Scalars['Int'];
-  kirbs: Scalars['Float'];
+  kirbCount: Scalars['Int'];
   text: Scalars['String'];
   textSnippet: Scalars['String'];
   title: Scalars['String'];
@@ -50,6 +51,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserResponse;
   updateBost?: Maybe<Bost>;
+  vote: Scalars['Boolean'];
 };
 
 
@@ -89,6 +91,12 @@ export type MutationRegisterArgs = {
 export type MutationUpdateBostArgs = {
   id: Scalars['Int'];
   title: Scalars['String'];
+};
+
+
+export type MutationVoteArgs = {
+  bostId: Scalars['Int'];
+  value: Scalars['Int'];
 };
 
 export type PaginatedBosts = {
@@ -192,7 +200,7 @@ export type BostsQueryVariables = Exact<{
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, createdAt: any, updatedAt: any }> } };
+export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -302,6 +310,10 @@ export const BostsDocument = gql`
       textSnippet
       createdAt
       updatedAt
+      creator {
+        id
+        username
+      }
     }
     hasMore
   }

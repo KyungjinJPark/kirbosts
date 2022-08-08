@@ -1,6 +1,6 @@
 import { dedupExchange, fetchExchange, stringifyVariables } from 'urql'
 import { cacheExchange, Entity, Resolver } from '@urql/exchange-graphcache'
-import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation } from '../generated/graphql'
+import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation, CreateBostMutation, BostsDocument, BostsQuery } from '../generated/graphql'
 
 // BEGIN global error handling
 import { pipe, tap } from 'wonka'
@@ -76,6 +76,13 @@ export const createUrqlClient = (ssrExchange) => ({
                   me: result.changePassword.user
                 }
               }
+            })
+          },
+          createBost: (result: CreateBostMutation, args, cache, info) => {
+            const allFields = cache.inspectFields('Query')
+            const fieldInfos = allFields.filter(info => info.fieldName === 'bosts')
+            fieldInfos.forEach(({fieldKey}) => {
+              cache.invalidate('Query', fieldKey)
             })
           },
         },
