@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from 'type-graphql'
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { User } from './User'
+import { Kirb } from './Kirb'
 
 @ObjectType() // TypeGQL decorator
 @Entity() // TypeORM decorator
@@ -19,11 +20,14 @@ export class Bost extends BaseEntity {
   @Column('text')
   text!: string
 
-  @Field()
+  @Field(() => Int)
   @Column({type: 'int', default: 0})
-  kirbs!: number
+  kirbCount!: number
 
-  @Field()
+  @OneToMany(() => Kirb, (kirb) => kirb.user)
+  kirbs: Kirb[]
+
+  @Field(() => Int)
   @Column()
   creatorId!: number
 

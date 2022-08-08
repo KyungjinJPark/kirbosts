@@ -119,7 +119,7 @@ export class UserResolver {
     } catch (err) {
       // Username already taken
       switch (err.code) {
-        case '23505':
+        case '23505': // TODO: This is somethimes due to a duplicate email
           return {
             errors: [{
               field: 'username',

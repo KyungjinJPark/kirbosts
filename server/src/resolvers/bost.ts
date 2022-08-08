@@ -2,6 +2,7 @@ import { MyContext } from 'src/types';
 import { Bost } from '../entities/Bost';
 import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from 'type-graphql';
 import { isAuth } from '../middleware/isAuth';
+import { Kirb } from '../entities/Kirb';
 
 @InputType()
 class BostInput {
@@ -29,6 +30,26 @@ export class BostResolver {
     @Ctx() {req}: MyContext
   ): Promise<Bost> {
     return Bost.create({...input, creatorId: req.session.userId }).save()
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async vote(
+    @Arg('bostId', () => Int) bostId: number,
+    @Arg('value', () => Int) value: number,
+    @Ctx() {ds, req}: MyContext,
+  ): Promise<boolean> {
+    const {userId} = req.session
+    const deltaKirb = value === 1 ? 1 : -1
+
+    await ds.transaction(async (tem) => {
+      //? again, does this not use `user` & `bost`
+      await tem.insert(Kirb, {userId, bostId, value: deltaKirb})
+      await tem.update(Bost, {id: bostId}, {
+        kirbCount: () => `"kirbCount" + ${deltaKirb}`,
+      })
+    })
+    return true
   }
 
   // =============== READ ===============

@@ -14,6 +14,8 @@ import { COOKIE_NAME, __prod__ } from './constants'
 import { MyContext } from './types'
 import cors from 'cors'
 // import { Bost } from './entities/Bost';
+// import { User } from './entities/User';
+// import { Kirb } from './entities/Kirb';
 
 const main = async () => {
   // =============== Redis set-up ===============
@@ -25,10 +27,16 @@ const main = async () => {
   await ds.initialize()
   .then(() => {
     // // here you can start to work with your database
+    // // delete all bosts
     // Bost.delete({})
+    // // delete all users
+    // User.delete({})
+    // // delete all kirbs
+    // Kirb.delete({})
   })
   .catch((error) => console.log(error))
-  ds.runMigrations();
+  // // ds.dropDatabase()
+  ds.runMigrations()
 
   // =============== old MikroORM examples ===============
   // const bost = orm.em.create(Bost, {title: 'test bost'}) // NOT auto-added to db
@@ -54,7 +62,7 @@ const main = async () => {
       validate: false,
     }),
     context: ({req, res}): MyContext => {
-      return ({redis, req, res})
+      return ({ds, redis, req, res})
     }
   })
   await apolloServer.start()

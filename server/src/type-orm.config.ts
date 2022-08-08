@@ -3,6 +3,7 @@ import path from 'path';
 import { __prod__ } from './constants';
 import { Bost } from './entities/Bost';
 import { User } from './entities/User';
+import { Kirb } from "./entities/Kirb";
 
 export default {
   // allowGlobalContext: true,
@@ -14,6 +15,6 @@ export default {
   password: 'kirbosts',
   logging: true,
   synchronize: !__prod__,
-  entities: [Bost, User],
+  entities: [Bost, User, Kirb],
   migrations: [path.join(__dirname, './migrations/*')]
 } as ConstructorParameters<typeof DataSource>[0]
