@@ -41,13 +41,29 @@ export class BostResolver {
   ): Promise<boolean> {
     const {userId} = req.session
     const deltaKirb = value === 1 ? 1 : -1
+    const prevKirb = await Kirb.findOneBy({bostId, userId})
 
     await ds.transaction(async (tem) => {
       //? again, does this not use `user` & `bost`
-      await tem.insert(Kirb, {userId, bostId, value: deltaKirb})
-      await tem.update(Bost, {id: bostId}, {
-        kirbCount: () => `"kirbCount" + ${deltaKirb}`,
-      })
+      if (prevKirb) {
+        if (prevKirb.value === deltaKirb) {
+          await Kirb.delete({userId, bostId})
+          await Bost.update({id: bostId}, {
+            kirbCount: () => `"kirbCount" - ${deltaKirb}`,
+          })
+        } else {
+          await tem.update(Kirb, {userId, bostId}, {value: deltaKirb})
+          await tem.update(Bost, {id: bostId}, {
+            kirbCount: () => `"kirbCount" + ${2 * deltaKirb}`,
+          })
+        }
+      } else {
+        await tem.insert(Kirb, {userId, bostId, value: deltaKirb})
+        await tem.update(Bost, {id: bostId}, {
+          kirbCount: () => `"kirbCount" + ${deltaKirb}`,
+        })
+      }
+      
     })
     return true
   }
@@ -58,6 +74,18 @@ export class BostResolver {
     @Root() root: Bost
   ) {
     return root.text.slice(0, 80) + (root.text.length > 80 ? "..." : "")
+  }
+
+  @FieldResolver(() => Int)
+  async kirbStatus(
+    @Root() root: Bost,
+    @Ctx() {req}: MyContext,
+  ) {
+    if (req.session.userId) {
+      const data = await Kirb.findOneBy({bostId: root.id, userId: req.session.userId})
+      return data ? data.value : 0
+    }
+    return 0
   }
   
   @Query(() => PaginatedBosts) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`

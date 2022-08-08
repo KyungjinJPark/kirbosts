@@ -20,10 +20,10 @@ export const AddKirbSection: React.FC<AddKirbSectionProps> = ({bost}) => {
           bostId: bost.id,
           value: 1,
         })}
+        colorScheme={bost.kirbStatus === 1 ? "green" : "gray"}
         aria-label="upkirb bost"
         icon={<ChevronUpIcon />}
         size="sm"
-        variant="ghost"
       />
       <Text>{bost.kirbCount}</Text>
       <IconButton
@@ -31,10 +31,10 @@ export const AddKirbSection: React.FC<AddKirbSectionProps> = ({bost}) => {
           bostId: bost.id,
           value: -1,
         })}
+        colorScheme={bost.kirbStatus === -1 ? "red" : "gray"}
         aria-label="downkirb bost"
         icon={<ChevronDownIcon />}
         size="sm"
-        variant="ghost"
       />
     </Flex>
   )

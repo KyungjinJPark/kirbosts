@@ -3,6 +3,7 @@ fragment BostSnippet on Bost {
   title
   textSnippet
   kirbCount
+  kirbStatus
   createdAt
   updatedAt
   creator {

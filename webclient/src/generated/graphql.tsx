@@ -24,6 +24,7 @@ export type Bost = {
   creatorId: Scalars['Int'];
   id: Scalars['Int'];
   kirbCount: Scalars['Int'];
+  kirbStatus: Scalars['Int'];
   text: Scalars['String'];
   textSnippet: Scalars['String'];
   title: Scalars['String'];
@@ -145,7 +146,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type BostSnippetFragment = { __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } };
+export type BostSnippetFragment = { __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } };
 
 export type CommonFieldErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -210,7 +211,7 @@ export type BostsQueryVariables = Exact<{
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
+export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -223,6 +224,7 @@ export const BostSnippetFragmentDoc = gql`
   title
   textSnippet
   kirbCount
+  kirbStatus
   createdAt
   updatedAt
   creator {
