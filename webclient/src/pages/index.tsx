@@ -17,11 +17,6 @@ const Index = () => {
 
   return (
     <Layout>
-      <Flex align="center">
-        <Heading>Kirbosts</Heading>
-        <NextLink href="/create-bost"><Link ml="auto">Create a Bost</Link></NextLink>
-      </Flex>
-      <br />
       {fetching && !data
         ? <div>loading...</div>
         : <Stack spacing={8}>

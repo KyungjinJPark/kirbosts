@@ -15,24 +15,28 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       <NextLink href="/register"><Link ml={2} color="black">Register</Link></NextLink>
     </>)
   } else {
-    body = (<Flex>
-      <Box>{data?.me.username}</Box>
+    body = (<Flex align="center">
+      <NextLink href="/create-bost"><Button as={Link}>Create a Bost</Button></NextLink>
+      <Box ml={2}>{data?.me.username}</Box>
       <Button onClick={() => logout()} isLoading={logoutFetching} variant="link" ml={2}>Logout</Button>
     </Flex>)
   }
   
   return (
-    <Flex
-      align="center"
-      bg="tan"
-      p={4}
-    >
-      <NextLink href="/"><Link>
-        <Heading>Kirbosts</Heading>
-      </Link></NextLink>
-      <Box ml={'auto'}>
-        {body}
-      </Box>
-    </Flex>
+    <Box position="sticky" top={0} zIndex={10} bg="tan" >
+      <Flex
+        maxW="800px"
+        mx="auto"
+        align="center"
+        py={4}
+      >
+        <NextLink href="/"><Link>
+          <Heading>Kirbosts</Heading>
+        </Link></NextLink>
+        <Box ml={'auto'}>
+          {body}
+        </Box>
+      </Flex>
+    </Box>
   )
 }
