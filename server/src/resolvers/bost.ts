@@ -122,16 +122,28 @@ export class BostResolver {
 
   // =============== UPDATE ===============
   @Mutation(() => Bost, {nullable: true})
+  @UseMiddleware(isAuth)
   async updateBost(
     @Arg('id', () => Int) id: number,
     @Arg('title') title: string,
+    @Arg('text') text: string,
+    @Ctx() {req}: MyContext
   ): Promise<Bost | null> { // ig every return is still a for GQL
     const bost = await Bost.findOne({where: {id}}) // eq to findOneBy({id})
     if (bost === null) {
       return null
     }
-    await Bost.update({id}, {title})
-    return bost
+    return Bost
+      .createQueryBuilder()
+      .update()
+      .set({title, text})
+      .where(
+        'id = :id AND creatorId = :creatorId',
+        {id, creatorId: req.session.userId}
+      )
+      .returning('*')
+      .execute()
+      .then((res) => res.raw[0])
   }
 
   // =============== DELETE ===============
