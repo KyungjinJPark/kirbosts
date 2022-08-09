@@ -45,6 +45,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - `URQL` + `GraphQL client`
 - `GraphQL Code Generator`
 - server side rendering with `next-urql`
+- custom `URQL` pagination
 
 ---
 
@@ -58,12 +59,16 @@ A certain pink, floaty, ball-like character is the mascot of a discord server I 
 
 The creation of this app follows [this tutorial](https://youtu.be/I6ypD7qv3Z8) by [Ben Awad](https://www.youtube.com/c/BenAwad97).
 
-## Considerations
+## Bugs & Considerations
 
 Cursor based pagination
 
 - only works with timestamp cursors ordered by createdAt
-- will skip over bosts if the cursor is set to a timestamp that happens to be equivalent to that of a bost that hasn't been queried. 
+- will skip over bosts if the cursor is set to a timestamp that happens to be equivalent to that of a bost that hasn't been queried.
+
+Routing
+
+- going to any /bost/edit route directly causes SSR error
 
 ## Learning Notes
 

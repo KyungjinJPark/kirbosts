@@ -1,0 +1,9 @@
+mutation UpdateBost($id: Int!, $title: String!, $text: String!) {
+  updateBost(id: $id, title: $title, text: $text) {
+    id
+    title
+    text
+    textSnippet
+    updatedAt
+  }
+}

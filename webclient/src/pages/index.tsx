@@ -1,18 +1,16 @@
-import { Box, Button, Flex, Heading, Link, Stack, Text, IconButton } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react"
 import { withUrqlClient } from "next-urql"
-import { Layout } from "../components/Layout"
-import { useBostsQuery, useDeleteBostMutation, useMeQuery } from "../generated/graphql"
-import { createUrqlClient } from "../utils/createUrqlClient"
-import NextLink from "next/link";
+import NextLink from "next/link"
 import { useState } from "react"
 import { AddKirbSection } from "../components/AddKirbSection"
-import { DeleteIcon } from "@chakra-ui/icons"
+import { EditDeleteBostButtons } from "../components/EditDeleteBostButtons"
+import { Layout } from "../components/Layout"
+import { useBostsQuery } from "../generated/graphql"
+import { createUrqlClient } from "../utils/createUrqlClient"
 
 const Index = () => {
-  const [{data: medata}] = useMeQuery()
   const [variables, setVariables] = useState({limit: 10, cursor: null as string});
   const [{data, fetching}] = useBostsQuery({variables})
-  const [, deleteBost] = useDeleteBostMutation()
 
   if (!fetching && !data) {
     return <div>Bosts failed to load</div> 
@@ -35,15 +33,7 @@ const Index = () => {
                   bost.textSnippet
                 }</Text>
               </Box>
-              {bost.creator.id === medata.me.id && <IconButton
-                onClick={() => deleteBost({
-                  id: bost.id,
-                })}
-                colorScheme="gray"
-                aria-label="delete bost"
-                icon={<DeleteIcon />}
-                size="sm"
-              />}
+              <EditDeleteBostButtons bostId={bost.id} creatorId={bost.creator.id} />
             </Flex>
           })}
         </Stack>

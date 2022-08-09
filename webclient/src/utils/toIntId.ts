@@ -1,0 +1,1 @@
+export const toIntId = (queryId) => typeof queryId === 'string' ? parseInt(queryId) : -1

@@ -1,20 +1,13 @@
-import { Heading, Text } from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
-import { useRouter } from "next/router";
+import { EditDeleteBostButtons } from "../../components/EditDeleteBostButtons";
 import { Layout } from "../../components/Layout";
-import { useBostQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { useGetBostFromUrl } from "../../utils/useGetBostFromUrl";
 
 const Bost: NextPage = () => {
-  const router = useRouter()
-  const bostId = typeof router.query.id === 'string' ? parseInt(router.query.id) : -1
-  const [{data, error, fetching}] = useBostQuery({
-    pause: bostId === -1,
-    variables: {
-      id: bostId,
-    }
-  })
+  const [{data, error, fetching}] = useGetBostFromUrl()
 
   if (fetching) {
     return <Layout>
@@ -36,10 +29,12 @@ const Bost: NextPage = () => {
   
   return (
     <Layout>
-      <Heading >{data.bost.title}</Heading>
+      <Flex>
+        <Heading mr="auto">{data.bost.title}</Heading>
+        <EditDeleteBostButtons bostId={data.bost.id} creatorId={data.bost.creator.id} />
+      </Flex>
       <Text mb={4}>{data.bost.creator.username}</Text>
-      <br />
-      {data.bost.text}
+      <Text mb={4}>{data.bost.text}</Text>
     </Layout>
   )
 }
