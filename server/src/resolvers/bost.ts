@@ -136,10 +136,21 @@ export class BostResolver {
 
   // =============== DELETE ===============
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async deleteBost(
     @Arg('id', () => Int) id: number,
+    @Ctx() {req}: MyContext,
   ): Promise<boolean> { // ig every return is still a for GQL
+    // delete the kirbs
+    const bost = await Bost.findOneBy({id})
+    if (!bost) {
+      return false
+    }
+    if (bost.creatorId === req.session.userId) {
+      Kirb.delete({bostId: id})
+    }
+    // delete the bost
     await Bost.delete({id})
-    return true // TODO: assumes the delete worked
+    return true
   }
 }

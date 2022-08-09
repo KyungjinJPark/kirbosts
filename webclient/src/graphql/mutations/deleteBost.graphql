@@ -1,0 +1,3 @@
+mutation DeleteBost($id: Int!) {
+  deleteBost(id: $id)
+}

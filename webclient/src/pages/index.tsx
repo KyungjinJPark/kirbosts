@@ -1,15 +1,18 @@
-import { Box, Button, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Link, Stack, Text, IconButton } from "@chakra-ui/react"
 import { withUrqlClient } from "next-urql"
 import { Layout } from "../components/Layout"
-import { useBostsQuery } from "../generated/graphql"
+import { useBostsQuery, useDeleteBostMutation, useMeQuery } from "../generated/graphql"
 import { createUrqlClient } from "../utils/createUrqlClient"
 import NextLink from "next/link";
 import { useState } from "react"
 import { AddKirbSection } from "../components/AddKirbSection"
+import { DeleteIcon } from "@chakra-ui/icons"
 
 const Index = () => {
+  const [{data: medata}] = useMeQuery()
   const [variables, setVariables] = useState({limit: 10, cursor: null as string});
-  const [{data, fetching, ...other}] = useBostsQuery({variables})
+  const [{data, fetching}] = useBostsQuery({variables})
+  const [, deleteBost] = useDeleteBostMutation()
 
   if (!fetching && !data) {
     return <div>Bosts failed to load</div> 
@@ -21,9 +24,9 @@ const Index = () => {
         ? <div>loading...</div>
         : <Stack spacing={8}>
           {data.bosts.bosts.map((bost) => {
-            return <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
+            return !bost ? null : <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
               <AddKirbSection bost={bost} />
-              <Box>
+              <Box flex={1}>
                 <NextLink href="/bost/[id]" as={`/bost/${bost.id}`}><Link>
                   <Heading fontSize="xl">{bost.title}</Heading>
                 </Link></NextLink>
@@ -32,6 +35,15 @@ const Index = () => {
                   bost.textSnippet
                 }</Text>
               </Box>
+              {bost.creator.id === medata.me.id && <IconButton
+                onClick={() => deleteBost({
+                  id: bost.id,
+                })}
+                colorScheme="gray"
+                aria-label="delete bost"
+                icon={<DeleteIcon />}
+                size="sm"
+              />}
             </Flex>
           })}
         </Stack>

@@ -170,6 +170,13 @@ export type CreateBostMutationVariables = Exact<{
 
 export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any } };
 
+export type DeleteBostMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteBostMutation = { __typename?: 'Mutation', deleteBost: boolean };
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -293,6 +300,15 @@ export const CreateBostDocument = gql`
 
 export function useCreateBostMutation() {
   return Urql.useMutation<CreateBostMutation, CreateBostMutationVariables>(CreateBostDocument);
+};
+export const DeleteBostDocument = gql`
+    mutation DeleteBost($id: Int!) {
+  deleteBost(id: $id)
+}
+    `;
+
+export function useDeleteBostMutation() {
+  return Urql.useMutation<DeleteBostMutation, DeleteBostMutationVariables>(DeleteBostDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
