@@ -29,7 +29,9 @@ const Index = () => {
             return <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
               <AddKirbSection bost={bost} />
               <Box>
-                <Heading fontSize="xl">{bost.title}</Heading>
+                <NextLink href="/bost/[id]" as={`/bost/${bost.id}`}><Link>
+                  <Heading fontSize="xl">{bost.title}</Heading>
+                </Link></NextLink>
                 <Text>posted by {bost.creator.username}</Text>
                 <Text mt={4}>{
                   bost.textSnippet

@@ -33,6 +33,8 @@ export class Bost extends BaseEntity {
 
   //? I don't think this actually does anything rn b/c when mutation createBost
   //? is called, creator isn't passed in
+  //? This is not true, not sure how these connect w no logic on the migration.
+  //? could it be autodetecting `error`
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.bosts)
   creator: User

@@ -205,6 +205,13 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
 
+export type BostQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type BostQuery = { __typename?: 'Query', bost?: { __typename?: 'Bost', id: number, title: string, text: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } } | null };
+
 export type BostsQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: InputMaybe<Scalars['String']>;
@@ -335,6 +342,27 @@ export const VoteDocument = gql`
 
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
+export const BostDocument = gql`
+    query Bost($id: Int!) {
+  bost(id: $id) {
+    id
+    title
+    text
+    kirbCount
+    kirbStatus
+    createdAt
+    updatedAt
+    creator {
+      id
+      username
+    }
+  }
+}
+    `;
+
+export function useBostQuery(options: Omit<Urql.UseQueryArgs<BostQueryVariables>, 'query'>) {
+  return Urql.useQuery<BostQuery>({ query: BostDocument, ...options });
 };
 export const BostsDocument = gql`
     query Bosts($limit: Int!, $cursor: String) {

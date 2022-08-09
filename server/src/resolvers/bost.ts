@@ -117,7 +117,7 @@ export class BostResolver {
   bost(
     @Arg('id', () => Int) id: number, // arg1, `Int` needed. Float type inferred
   ): Promise<Bost | null> {
-    return Bost.findOneBy({id}) // where by default
+    return Bost.findOne({where: {id}, relations: ["creator"]})
   }
 
   // =============== UPDATE ===============
