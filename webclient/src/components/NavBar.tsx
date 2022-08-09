@@ -1,7 +1,6 @@
-import { Box, Button, Flex, Link } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react"
 import NextLink from "next/link" // client side routing
 import { useLogoutMutation, useMeQuery } from "../generated/graphql"
-import { isServer } from "../utils/isServer"
 
 interface NavBarProps {}
 
@@ -24,9 +23,13 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   
   return (
     <Flex
+      align="center"
       bg="tan"
       p={4}
     >
+      <NextLink href="/"><Link>
+        <Heading>Kirbosts</Heading>
+      </Link></NextLink>
       <Box ml={'auto'}>
         {body}
       </Box>
