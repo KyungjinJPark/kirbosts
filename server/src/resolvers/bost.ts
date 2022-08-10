@@ -1,9 +1,7 @@
-import { MyContext } from 'src/types';
-import { Bost } from '../entities/Bost';
-import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from 'type-graphql';
-import { isAuth } from '../middleware/isAuth';
-import { Kirb } from '../entities/Kirb';
-import { User } from '../entities/User';
+import { MyContext } from 'src/types'
+import { Bost, Kirb, User } from '../entities'
+import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from 'type-graphql'
+import { isAuth } from '../middleware/isAuth'
 
 @InputType()
 class BostInput {

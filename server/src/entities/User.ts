@@ -1,7 +1,6 @@
 import { ObjectType, Field, Int } from 'type-graphql'
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { Bost } from './Bost'
-import { Kirb } from './Kirb'
+import { Bost, Kirb } from './'
 
 @ObjectType()
 @Entity()

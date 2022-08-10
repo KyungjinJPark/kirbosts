@@ -1,6 +1,6 @@
-import DataLoader from "dataloader"
-import { Kirb } from "../entities/Kirb"
-import { In } from "typeorm";
+import DataLoader from 'dataloader'
+import { Kirb } from '../entities'
+import { In } from 'typeorm'
 
 const batchFunc = async(kirbIds: readonly {bostId: number, userId: number}[]): Promise<Kirb[]> => {
   const bostIds = kirbIds.map((kids) => kids.bostId)

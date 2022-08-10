@@ -1,7 +1,6 @@
 import { ObjectType, Field, Int } from 'type-graphql'
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { User } from './User'
-import { Kirb } from './Kirb'
+import { Kirb, User } from './'
 
 @ObjectType() // TypeGQL decorator
 @Entity() // TypeORM decorator

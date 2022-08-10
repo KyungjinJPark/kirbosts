@@ -1,9 +1,9 @@
-import { MyContext } from '../types';
-import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, Root } from 'type-graphql';
-import { User } from '../entities/User';
+import { MyContext } from '../types'
+import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, Root } from 'type-graphql'
+import { User } from '../entities'
 import argon2 from 'argon2'
-import { COOKIE_NAME, EMAIL_REGEX, FORGOT_PASSWORD_PREFIX } from '../constants';
-import { sendEmail } from '../utils/sendEmail';
+import { COOKIE_NAME, EMAIL_REGEX, FORGOT_PASSWORD_PREFIX } from '../constants'
+import { sendEmail } from '../utils/sendEmail'
 import { v4 } from 'uuid'
 
 // alternate way to define arguments

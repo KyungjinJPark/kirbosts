@@ -1,6 +1,6 @@
-import DataLoader from "dataloader"
-import { User } from "../entities/User"
-import { In } from "typeorm";
+import DataLoader from 'dataloader'
+import { User } from '../entities'
+import { In } from 'typeorm'
 
 const batchFunc = async(userIds: readonly number[]): Promise<User[]> => {
   const users = await User.findBy({ id: In(userIds as number[])});

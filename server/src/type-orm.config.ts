@@ -1,9 +1,7 @@
-import { DataSource } from "typeorm";
-import path from 'path';
-import { __prod__ } from './constants';
-import { Bost } from './entities/Bost';
-import { User } from './entities/User';
-import { Kirb } from "./entities/Kirb";
+import { DataSource } from 'typeorm'
+import path from 'path'
+import { __prod__ } from './constants'
+import { Bost, Kirb, User } from './entities'
 
 export default {
   // allowGlobalContext: true,
