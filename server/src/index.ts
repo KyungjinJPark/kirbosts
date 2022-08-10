@@ -13,6 +13,8 @@ import session from "express-session"
 import { COOKIE_NAME, __prod__ } from './constants'
 import { MyContext } from './types'
 import cors from 'cors'
+import { createUserLoader } from './utils/createUserLoader';
+import { createKirbLoader } from './utils/createKirbLoader';
 // import { Bost } from './entities/Bost';
 // import { User } from './entities/User';
 // import { Kirb } from './entities/Kirb';
@@ -62,7 +64,10 @@ const main = async () => {
       validate: false,
     }),
     context: ({req, res}): MyContext => {
-      return ({ds, redis, req, res})
+      return ({ds, redis, req, res,
+        userLoader: createUserLoader(), // init every new req
+        kirbLoader: createKirbLoader(),
+      })
     }
   })
   await apolloServer.start()

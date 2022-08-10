@@ -3,6 +3,7 @@ import { Bost } from '../entities/Bost';
 import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from 'type-graphql';
 import { isAuth } from '../middleware/isAuth';
 import { Kirb } from '../entities/Kirb';
+import { User } from '../entities/User';
 
 @InputType()
 class BostInput {
@@ -69,7 +70,9 @@ export class BostResolver {
   }
 
   // =============== READ ===============
-  @FieldResolver(() => String) // GQL computed field
+  // GQL computed field : good for performance (usually) b/c they are only run
+  // when the data is actually included in the query
+  @FieldResolver(() => String)
   textSnippet(
     @Root() root: Bost
   ) {
@@ -79,13 +82,21 @@ export class BostResolver {
   @FieldResolver(() => Int)
   async kirbStatus(
     @Root() root: Bost,
-    @Ctx() {req}: MyContext,
+    @Ctx() {req, kirbLoader}: MyContext,
   ) {
     if (req.session.userId) {
-      const data = await Kirb.findOneBy({bostId: root.id, userId: req.session.userId})
-      return data ? data.value : 0
+      const kirb = await kirbLoader.load({bostId: root.id, userId: req.session.userId})
+      return kirb ? kirb.value : 0
     }
     return 0
+  }
+
+  @FieldResolver(() => User)
+  async creator(
+    @Root() root: Bost,
+    @Ctx() {userLoader}: MyContext,
+    ) {
+    return userLoader.load(root.creatorId) // cache-adjacent for server
   }
   
   @Query(() => PaginatedBosts) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`
@@ -98,18 +109,12 @@ export class BostResolver {
 
     const qb = Bost
       .createQueryBuilder('b')
-      .innerJoinAndSelect( // this get called even if creator is not fetched
-        'b.creator',
-        'u', // user alias
-        'u.id = b.creatorId' //? since 'creator isn't used, this is required
-      )
       .orderBy('b.createdAt', 'DESC') // doesn't work with "s around createdAt
-      .take(countExtra)
     if (cursor) {
       qb.where('b."createdAt" < :cursor', { cursor: new Date(cursor) })
     }
 
-    const bosts = await qb.getMany()
+    const bosts = await qb.take(countExtra).getMany()
     return {bosts: bosts.slice(0, count), hasMore: bosts.length === countExtra}
   }
 
@@ -117,7 +122,7 @@ export class BostResolver {
   bost(
     @Arg('id', () => Int) id: number, // arg1, `Int` needed. Float type inferred
   ): Promise<Bost | null> {
-    return Bost.findOne({where: {id}, relations: ["creator"]})
+    return Bost.findOneBy({id})
   }
 
   // =============== UPDATE ===============
