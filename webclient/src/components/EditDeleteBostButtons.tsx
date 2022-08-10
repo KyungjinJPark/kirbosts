@@ -12,7 +12,7 @@ export const EditDeleteBostButtons: React.FC<EditDeleteBostButtonsProps> = ({bos
   const [{data}] = useMeQuery()
   const [, deleteBost] = useDeleteBostMutation()
   
-  return creatorId !== data?.me.id ? null : <Box>
+  return creatorId !== data?.me?.id ? null : <Box>
     <NextLink href="/bost/edit/[id]" as={`/bost/edit/${bostId}`}>
       <IconButton
         as={Link}
