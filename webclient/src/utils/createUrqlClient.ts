@@ -1,5 +1,5 @@
 import { dedupExchange, fetchExchange, gql } from 'urql'
-import { cacheExchange, Entity, Resolver } from '@urql/exchange-graphcache'
+import { Cache, cacheExchange, Entity, Resolver } from '@urql/exchange-graphcache'
 import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation, CreateBostMutation, VoteMutation, VoteMutationVariables, DeleteBostMutation, DeleteBostMutationVariables } from '../generated/graphql'
 import { isServer } from './isServer'
 
@@ -54,6 +54,7 @@ export const createUrqlClient = (ssrExchange, ctx) => {
                 if (result.login.errors) {
                   return data
                 } else {
+                  invalidateAllBosts(cache)
                   return {
                     me: result.login.user
                   }
@@ -88,11 +89,7 @@ export const createUrqlClient = (ssrExchange, ctx) => {
               })
             },
             createBost: (result: CreateBostMutation, args, cache, info) => {
-              const allFields = cache.inspectFields('Query')
-              const fieldInfos = allFields.filter(info => info.fieldName === 'bosts')
-              fieldInfos.forEach(({fieldKey}) => {
-                cache.invalidate('Query', fieldKey)
-              })
+              invalidateAllBosts(cache)
             },
             deleteBost: (result: DeleteBostMutation, args: DeleteBostMutationVariables, cache, info) => {
               cache.invalidate({__typename: 'Bost', id: args.id})
@@ -179,57 +176,13 @@ const cursorPagination = (): Resolver => {
       bosts: results,
       hasMore
     }
-
-  //   const visited = new Set();
-  //   let result: NullArray<string> = [];
-  //   let prevOffset: number | null = null;
-
-  //   for (let i = 0; i < size; i++) {
-  //     const { fieldKey, arguments: args } = fieldInfos[i];
-  //     if (args === null || !compareArgs(fieldArgs, args)) {
-  //       continue;
-  //     }
-
-  //     const links = cache.resolve(entityKey, fieldKey) as string[];
-  //     const currentOffset = args[cursorArgument];
-
-  //     if (
-  //       links === null ||
-  //       links.length === 0 ||
-  //       typeof currentOffset !== 'number'
-  //     ) {
-  //       continue;
-  //     }
-
-  //     const tempResult: NullArray<string> = [];
-
-  //     for (let j = 0; j < links.length; j++) {
-  //       const link = links[j];
-  //       if (visited.has(link)) continue;
-  //       tempResult.push(link);
-  //       visited.add(link);
-  //     }
-
-  //     if (
-  //       (!prevOffset || currentOffset > prevOffset) ===
-  //       (mergeMode === 'after')
-  //     ) {
-  //       result = [...result, ...tempResult];
-  //     } else {
-  //       result = [...tempResult, ...result];
-  //     }
-
-  //     prevOffset = currentOffset;
-  //   }
-
-  //   const hasCurrentPage = cache.resolve(entityKey, fieldName, fieldArgs);
-  //   if (hasCurrentPage) {
-  //     return result;
-  //   } else if (!(info as any).store.schema) {
-  //     return undefined;
-  //   } else {
-  //     info.partial = true;
-  //     return result;
-  //   }
   }
+}
+
+function invalidateAllBosts(cache: Cache) {
+  const allFields = cache.inspectFields('Query')
+  const fieldInfos = allFields.filter(info => info.fieldName === 'bosts')
+  fieldInfos.forEach(({ fieldKey }) => {
+    cache.invalidate('Query', fieldKey)
+  })
 }
