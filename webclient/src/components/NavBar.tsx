@@ -29,7 +29,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   }
   
   return (
-    <Box position="sticky" top={0} zIndex={10} bg={colorMode === 'light' ? "purple.300" : "purple.900"} >
+    <Box
+      position="sticky"
+      top={0}
+      zIndex={10}
+      bg={colorMode === 'light' ? "purple.300" : "purple.900"}
+    >
       <Flex
         maxW="800px"
         mx="auto"
@@ -40,7 +45,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           <NextLink href="/"><Link mr={2}>
             <Heading>Kirbosts</Heading>
           </Link></NextLink>
-          <Text fontSize='xl'>v0.0.0.0.1</Text>
+          <Text
+            fontSize="xl"
+            bgGradient="linear(to-r, #FF0080, yellow.400)"
+            bgClip="text"
+            fontWeight="bold"
+          >v0.0.0.0.1</Text>
         </Flex>
         <Box ml={'auto'}>
           <Flex align="center">

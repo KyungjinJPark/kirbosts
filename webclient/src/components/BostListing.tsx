@@ -29,7 +29,7 @@ export const BostListing: React.FC<BostListingProps> = ({bost}) => {
   return <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
     <AddKirbSection bost={bost} />
     <Box flex={1} w="91%"> {/* This is sus & might break */}
-      <NextLink href="/bost/[id]" as={`/bost/${bost.id}`}>
+      <NextLink href={`/bost/${bost.id}`}>
         <Link>
           <Heading fontSize="xl">{bost.title}</Heading>
         </Link>
