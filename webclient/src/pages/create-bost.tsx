@@ -17,7 +17,7 @@ const CreateBost: React.FC<createBostProps> = ({}) => {
   const [, createBost] = useCreateBostMutation()
 
   return (
-    <Layout variant="small">
+    <Layout variant="regular">
       <Formik
         initialValues={{title: "", text: ""}}
         onSubmit={async (vals, {setErrors}) => {

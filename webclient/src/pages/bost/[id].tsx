@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Flex, Heading, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
 import { EditDeleteBostButtons } from "../../components/EditDeleteBostButtons";
@@ -26,9 +26,16 @@ const Bost: NextPage = () => {
       Error getting your data.
     </Layout>
   }
+
+  const alert = <Alert status='error' mb={4}>
+    <AlertIcon />
+    A human moderator has thoroughly and holistically evaluated this content
+    and has manually marked this bost as possibly offensive.
+  </Alert>
   
   return (
     <Layout>
+      {data.bost.creator.username === 'republicyuki' && alert}
       <Flex>
         <Heading mr="auto">{data.bost.title}</Heading>
         <EditDeleteBostButtons bostId={data.bost.id} creatorId={data.bost.creator.id} />

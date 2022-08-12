@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Link, Switch, useColorMode } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Text, Link, Switch, useColorMode } from "@chakra-ui/react"
 import NextLink from "next/link" // client side routing
 import { useRouter } from "next/router"
 import { useLogoutMutation, useMeQuery } from "../generated/graphql"
@@ -14,8 +14,8 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   let body = null
   if (fetching || data?.me === null) {
     body = (<>
-      <NextLink href="/login"><Link color="black">Login</Link></NextLink>
-      <NextLink href="/register"><Link ml={2} color="black">Register</Link></NextLink>
+      <NextLink href="/login"><Link>Login</Link></NextLink>
+      <NextLink href="/register"><Link ml={2}>Register</Link></NextLink>
     </>)
   } else {
     body = (<>
@@ -24,7 +24,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       <Button onClick={async () => {
         await logout()
         router.reload()
-      }} isLoading={logoutFetching} variant="link" ml={2}>Logout</Button>
+      }} isLoading={logoutFetching} variant="link" ml={2} colorScheme="black">Logout</Button>
     </>)
   }
   
@@ -36,9 +36,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         align="center"
         py={4}
       >
-        <NextLink href="/"><Link>
-          <Heading>Kirbosts</Heading>
-        </Link></NextLink>
+        <Flex align={"end"}>
+          <NextLink href="/"><Link mr={2}>
+            <Heading>Kirbosts</Heading>
+          </Link></NextLink>
+          <Text fontSize='xl'>v0.0.0.0.1</Text>
+        </Flex>
         <Box ml={'auto'}>
           <Flex align="center">
             {body}

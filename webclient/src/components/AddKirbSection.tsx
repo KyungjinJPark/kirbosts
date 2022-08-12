@@ -1,9 +1,9 @@
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons"
 import { Flex, IconButton, Text } from "@chakra-ui/react"
-import { BostSnippetFragment, useVoteMutation } from "../generated/graphql"
+import { BostsQuery, useVoteMutation } from "../generated/graphql"
 
 interface AddKirbSectionProps {
-  bost: BostSnippetFragment
+  bost: BostsQuery['bosts']['bosts'][0]
 }
 
 export const AddKirbSection: React.FC<AddKirbSectionProps> = ({bost}) => {

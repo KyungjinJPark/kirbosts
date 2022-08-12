@@ -38,7 +38,7 @@ const EditBost: React.FC<createBostProps> = ({}) => {
   }
 
   return (
-    <Layout variant="small">
+    <Layout variant="regular">
       <Formik
         initialValues={{title: data.bost.title, text: data.bost.text}}
         onSubmit={async (vals) => {

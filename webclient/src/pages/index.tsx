@@ -18,14 +18,14 @@ const Index = () => {
     <Layout>
       {fetching && !data
         ? <div>loading...</div>
-        : <Stack spacing={8}>
+        : <Stack spacing={8} mb={8}>
           {data.bosts.bosts.map((bost) => {
             return !bost ? null : <BostListing bost={bost} />
           })}
         </Stack>
       }
       {data && data.bosts.hasMore
-        ? <Flex>
+        ? <Flex my={8}>
           <Button
             onClick={() => {
               setVariables({
@@ -35,7 +35,6 @@ const Index = () => {
             }}
             isLoading={fetching}
             m="auto"
-            my={8}
           >Load more</Button>
         </Flex>
         : undefined}
