@@ -1,7 +1,6 @@
-fragment BostSnippet on Bost {
+fragment CommonBost on Bost {
   id
   title
-  textSnippet
   kirbCount
   kirbStatus
   createdAt

@@ -147,7 +147,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type BostSnippetFragment = { __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } };
+export type CommonBostFragment = { __typename?: 'Bost', id: number, title: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } };
 
 export type CommonFieldErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -227,7 +227,14 @@ export type BostQueryVariables = Exact<{
 }>;
 
 
-export type BostQuery = { __typename?: 'Query', bost?: { __typename?: 'Bost', id: number, title: string, text: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } } | null };
+export type BostQuery = { __typename?: 'Query', bost?: { __typename?: 'Bost', text: string, id: number, title: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } } | null };
+
+export type BostTextQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type BostTextQuery = { __typename?: 'Query', bost?: { __typename?: 'Bost', text: string } | null };
 
 export type BostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -235,18 +242,17 @@ export type BostsQueryVariables = Exact<{
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, textSnippet: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
+export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', textSnippet: string, id: number, title: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string } | null };
 
-export const BostSnippetFragmentDoc = gql`
-    fragment BostSnippet on Bost {
+export const CommonBostFragmentDoc = gql`
+    fragment CommonBost on Bost {
   id
   title
-  textSnippet
   kirbCount
   kirbStatus
   createdAt
@@ -387,34 +393,37 @@ export function useVoteMutation() {
 export const BostDocument = gql`
     query Bost($id: Int!) {
   bost(id: $id) {
-    id
-    title
+    ...CommonBost
     text
-    kirbCount
-    kirbStatus
-    createdAt
-    updatedAt
-    creator {
-      id
-      username
-    }
+  }
+}
+    ${CommonBostFragmentDoc}`;
+
+export function useBostQuery(options: Omit<Urql.UseQueryArgs<BostQueryVariables>, 'query'>) {
+  return Urql.useQuery<BostQuery>({ query: BostDocument, ...options });
+};
+export const BostTextDocument = gql`
+    query BostText($id: Int!) {
+  bost(id: $id) {
+    text
   }
 }
     `;
 
-export function useBostQuery(options: Omit<Urql.UseQueryArgs<BostQueryVariables>, 'query'>) {
-  return Urql.useQuery<BostQuery>({ query: BostDocument, ...options });
+export function useBostTextQuery(options: Omit<Urql.UseQueryArgs<BostTextQueryVariables>, 'query'>) {
+  return Urql.useQuery<BostTextQuery>({ query: BostTextDocument, ...options });
 };
 export const BostsDocument = gql`
     query Bosts($limit: Int!, $cursor: String) {
   bosts(limit: $limit, cursor: $cursor) {
     bosts {
-      ...BostSnippet
+      ...CommonBost
+      textSnippet
     }
     hasMore
   }
 }
-    ${BostSnippetFragmentDoc}`;
+    ${CommonBostFragmentDoc}`;
 
 export function useBostsQuery(options: Omit<Urql.UseQueryArgs<BostsQueryVariables>, 'query'>) {
   return Urql.useQuery<BostsQuery>({ query: BostsDocument, ...options });

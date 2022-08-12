@@ -1,0 +1,5 @@
+query BostText($id: Int!) {
+  bost(id: $id) {
+    text
+  }
+}

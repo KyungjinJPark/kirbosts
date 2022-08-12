@@ -1,15 +1,6 @@
 query Bost($id: Int!) {
   bost(id: $id) {
-    id
-    title
+    ...CommonBost
     text
-    kirbCount
-    kirbStatus
-    createdAt
-    updatedAt
-    creator {
-      id
-      username
-    }
   }
 }

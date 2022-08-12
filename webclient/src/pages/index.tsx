@@ -1,15 +1,13 @@
-import { Box, Button, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react"
+import { Button, Flex, Stack } from "@chakra-ui/react"
 import { withUrqlClient } from "next-urql"
-import NextLink from "next/link"
 import { useState } from "react"
-import { AddKirbSection } from "../components/AddKirbSection"
-import { EditDeleteBostButtons } from "../components/EditDeleteBostButtons"
+import { BostListing } from "../components/BostListing"
 import { Layout } from "../components/Layout"
 import { useBostsQuery } from "../generated/graphql"
 import { createUrqlClient } from "../utils/createUrqlClient"
 
 const Index = () => {
-  const [variables, setVariables] = useState({limit: 10, cursor: null as string});
+  const [variables, setVariables] = useState({limit: 10, cursor: null as string})
   const [{data, fetching}] = useBostsQuery({variables})
 
   if (!fetching && !data) {
@@ -22,19 +20,7 @@ const Index = () => {
         ? <div>loading...</div>
         : <Stack spacing={8}>
           {data.bosts.bosts.map((bost) => {
-            return !bost ? null : <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
-              <AddKirbSection bost={bost} />
-              <Box flex={1}>
-                <NextLink href="/bost/[id]" as={`/bost/${bost.id}`}><Link>
-                  <Heading fontSize="xl">{bost.title}</Heading>
-                </Link></NextLink>
-                <Text>posted by {bost.creator.username}</Text>
-                <Text mt={4}>{
-                  bost.textSnippet
-                }</Text>
-              </Box>
-              <EditDeleteBostButtons bostId={bost.id} creatorId={bost.creator.id} />
-            </Flex>
+            return !bost ? null : <BostListing bost={bost} />
           })}
         </Stack>
       }

@@ -1,7 +1,8 @@
 query Bosts($limit: Int!, $cursor: String) {
   bosts(limit: $limit, cursor: $cursor) {
     bosts {
-      ...BostSnippet
+      ...CommonBost
+      textSnippet
     }
     hasMore
   }
