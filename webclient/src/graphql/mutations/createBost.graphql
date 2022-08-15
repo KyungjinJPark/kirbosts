@@ -1,10 +1,13 @@
 mutation CreateBost($input: BostInput!) {
   createBost(input: $input) {
-    id
-    title
-    text
-    creatorId
-    createdAt
-    updatedAt
+    bost {
+      id
+      title
+      text
+      creatorId
+      createdAt
+      updatedAt
+    }
+    errors {...CommonFieldError}
   }
 }

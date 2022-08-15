@@ -36,6 +36,12 @@ export type BostInput = {
   title: Scalars['String'];
 };
 
+export type BostResponse = {
+  __typename?: 'BostResponse';
+  bost?: Maybe<Bost>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -45,13 +51,13 @@ export type FieldError = {
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: UserResponse;
-  createBost: Bost;
+  createBost: BostResponse;
   deleteBost: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
-  updateBost?: Maybe<Bost>;
+  updateBost: BostResponse;
   vote: Scalars['Boolean'];
 };
 
@@ -169,7 +175,7 @@ export type CreateBostMutationVariables = Exact<{
 }>;
 
 
-export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any } };
+export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type DeleteBostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -212,7 +218,7 @@ export type UpdateBostMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBostMutation = { __typename?: 'Mutation', updateBost?: { __typename?: 'Bost', id: number, title: string, text: string, textSnippet: string, updatedAt: any } | null };
+export type UpdateBostMutation = { __typename?: 'Mutation', updateBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, textSnippet: string, updatedAt: any } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type VoteMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -304,15 +310,20 @@ export function useChangePasswordMutation() {
 export const CreateBostDocument = gql`
     mutation CreateBost($input: BostInput!) {
   createBost(input: $input) {
-    id
-    title
-    text
-    creatorId
-    createdAt
-    updatedAt
+    bost {
+      id
+      title
+      text
+      creatorId
+      createdAt
+      updatedAt
+    }
+    errors {
+      ...CommonFieldError
+    }
   }
 }
-    `;
+    ${CommonFieldErrorFragmentDoc}`;
 
 export function useCreateBostMutation() {
   return Urql.useMutation<CreateBostMutation, CreateBostMutationVariables>(CreateBostDocument);
@@ -369,14 +380,19 @@ export function useRegisterMutation() {
 export const UpdateBostDocument = gql`
     mutation UpdateBost($id: Int!, $title: String!, $text: String!) {
   updateBost(id: $id, title: $title, text: $text) {
-    id
-    title
-    text
-    textSnippet
-    updatedAt
+    bost {
+      id
+      title
+      text
+      textSnippet
+      updatedAt
+    }
+    errors {
+      ...CommonFieldError
+    }
   }
 }
-    `;
+    ${CommonFieldErrorFragmentDoc}`;
 
 export function useUpdateBostMutation() {
   return Urql.useMutation<UpdateBostMutation, UpdateBostMutationVariables>(UpdateBostDocument);

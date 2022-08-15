@@ -5,17 +5,7 @@ import argon2 from 'argon2'
 import { COOKIE_NAME, EMAIL_REGEX, FORGOT_PASSWORD_PREFIX } from '../constants'
 import { sendEmail } from '../utils/sendEmail'
 import { v4 } from 'uuid'
-
-// alternate way to define arguments
-@InputType()
-class RegisterInput {
-  @Field()
-  email: string
-  @Field()
-  username: string
-  @Field()
-  password: string
-}
+import { FieldError } from './types'
 
 // way to define output
 @ObjectType()
@@ -26,12 +16,15 @@ class UserResponse {
   user?: User
 }
 
-@ObjectType()
-class FieldError {
+// alternate way to define arguments
+@InputType()
+class RegisterInput {
   @Field()
-  field: string
+  email: string
   @Field()
-  message: string // will be displayed to UI
+  username: string
+  @Field()
+  password: string
 }
 
 // TODO: user IDs increment even on failed register attempts

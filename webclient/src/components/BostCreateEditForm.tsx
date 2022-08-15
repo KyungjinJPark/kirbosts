@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { InputField } from "../components/InputField"
 import { Layout } from "../components/Layout"
 import { BostQuery, useCreateBostMutation, useUpdateBostMutation } from "../generated/graphql"
-// import { toErrorMap } from "../utils/toErrorMap"
+import { toErrorMap } from "../utils/toErrorMap"
 
 interface BostCreateEditFormProps {
   editing?: boolean,
@@ -16,28 +16,30 @@ const BostCreateEditForm: React.FC<BostCreateEditFormProps> = ({editing, editing
   const [, updateBost] = useUpdateBostMutation()
   const [, createBost] = useCreateBostMutation()
 
+  const initVals = editing ? {title: editingBost.title, text: editingBost.text} : {title: '', text: ''}
   const buttonText = ['Cancel', editing ? 'Finish Editing' : 'Create Bost']
 
   return (
     <Layout variant="regular">
       <Formik
-        initialValues={{title: editingBost?.title, text: editingBost?.text}}
+        initialValues={initVals}
         onSubmit={async (vals, {setErrors}) => {
-          const response = editing
-            ? await updateBost({id: editingBost.id, ...vals})
-            : await createBost({input: vals})
-          // const data = response.data?.createBost
-          // if (data.errors !== null) {
-          //   setErrors(toErrorMap(data.errors))
-          // } else if (data.user !== null) {
-          //   // success
-          //   router.push("/")
-          // }
-          if (!response.error) {
-            editing
-              ? router.back()
-              : router.push('/')
-          } // error may be handled by global handler
+          if (editing) {
+            const {data: {updateBost: data}} = await updateBost({id: editingBost.id, ...vals})
+            if (data.errors !== null) {
+              setErrors(toErrorMap(data.errors))
+            } else if (data.bost !== null) {
+              router.back()
+            }
+          } else {
+            const {data: {createBost: data}} = await createBost({input: vals})
+            if (data.errors !== null) {
+              setErrors(toErrorMap(data.errors))
+            } else if (data.bost !== null) {
+              router.push('/')
+            }
+          }
+          // another error may be handled by global handler
         }}
       >
         {({isSubmitting}) => (

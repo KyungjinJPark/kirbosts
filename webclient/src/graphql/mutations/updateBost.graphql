@@ -1,9 +1,12 @@
 mutation UpdateBost($id: Int!, $title: String!, $text: String!) {
   updateBost(id: $id, title: $title, text: $text) {
-    id
-    title
-    text
-    textSnippet
-    updatedAt
+    bost {
+      id
+      title
+      text
+      textSnippet
+      updatedAt
+    }
+    errors {...CommonFieldError}
   }
 }

@@ -2,6 +2,7 @@ import { MyContext } from 'src/types'
 import { Bost, Kirb, User } from '../entities'
 import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from 'type-graphql'
 import { isAuth } from '../middleware/isAuth'
+import { FieldError } from './types'
 
 @InputType()
 class BostInput {
@@ -9,6 +10,14 @@ class BostInput {
   title: string
   @Field()
   text: string
+}
+
+@ObjectType()
+export class BostResponse {
+  @Field(() => [FieldError], {nullable: true})
+  errors?: FieldError[]
+  @Field(() => Bost, {nullable: true})
+  bost?: Bost
 }
 
 @ObjectType()
@@ -22,13 +31,37 @@ class PaginatedBosts {
 @Resolver(Bost)
 export class BostResolver { 
   // =============== CREATE ===============
-  @Mutation(() => Bost)
+  @Mutation(() => BostResponse)
   @UseMiddleware(isAuth)
   async createBost(
     @Arg('input') input: BostInput,
     @Ctx() {req}: MyContext
-  ): Promise<Bost> {
-    return Bost.create({...input, creatorId: req.session.userId }).save()
+  ): Promise<BostResponse> {
+
+    console.log(input);
+
+    input.title = input.title.trim()
+    input.text = input.text.trim()
+
+    console.log(input);
+
+    const errors = this.getBostContentErrors(input.title, input.text)
+    if (errors.length !== 0) {
+      return {errors}
+    } else {
+      return {bost: await Bost.create({...input, creatorId: req.session.userId}).save()}
+    }
+  }
+
+  private getBostContentErrors(title: string, text: string) {
+    const errors = []
+    if (title.length === 0) {
+      errors.push({ field: 'title', message: 'Title cannot be empty.' })
+    }
+    if (text.length === 0) {
+      errors.push({ field: 'text', message: 'Bost body cannot be empty.' })
+    }
+    return errors
   }
 
   @Mutation(() => Boolean)
@@ -124,29 +157,37 @@ export class BostResolver {
   }
 
   // =============== UPDATE ===============
-  @Mutation(() => Bost, {nullable: true})
+  @Mutation(() => BostResponse)
   @UseMiddleware(isAuth)
   async updateBost(
     @Arg('id', () => Int) id: number,
     @Arg('title') title: string,
     @Arg('text') text: string,
     @Ctx() {req}: MyContext
-  ): Promise<Bost | null> { // ig every return is still a for GQL
+  ): Promise<BostResponse> { // ig every return is still a for GQL
     const bost = await Bost.findOne({where: {id}}) // eq to findOneBy({id})
     if (bost === null) {
-      return null
+      return {errors: [{field: 'bost', message: `There is no bost with id ${id}.`}]}
     }
-    return Bost
-      .createQueryBuilder()
-      .update()
-      .set({title, text})
-      .where(
-        'id = :id AND creatorId = :creatorId',
-        {id, creatorId: req.session.userId}
-      )
-      .returning('*')
-      .execute()
-      .then((res) => res.raw[0])
+    title = title.trim()
+    text = text.trim()
+    const errors = this.getBostContentErrors(title, text)
+    if (errors.length !== 0) {
+      return {errors}
+    } else {
+      return { bost: await Bost
+        .createQueryBuilder()
+        .update()
+        .set({title, text})
+        .where(
+          'id = :id AND creatorId = :creatorId',
+          {id, creatorId: req.session.userId}
+        )
+        .returning('*')
+        .execute()
+        .then((res) => res.raw[0])
+      }
+    }
   }
 
   // =============== DELETE ===============
