@@ -53,17 +53,6 @@ export class BostResolver {
     }
   }
 
-  private getBostContentErrors(title: string, text: string) {
-    const errors = []
-    if (title.length === 0) {
-      errors.push({ field: 'title', message: 'Title cannot be empty.' })
-    }
-    if (text.length === 0) {
-      errors.push({ field: 'text', message: 'Bost body cannot be empty.' })
-    }
-    return errors
-  }
-
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async vote(
@@ -209,4 +198,21 @@ export class BostResolver {
     await Bost.delete({id})
     return true
   }
+
+  // =============== HELPERS ===============
+  getBostContentErrors(title: string, text: string) {
+    const errors = []
+    if (title.length === 0) {
+      errors.push({ field: 'title', message: 'Title cannot be empty.' })
+    } else if (title.length > 120) {
+      errors.push({ field: 'title', message: 'Title can only be 120 characters of less.' })
+    }
+  
+    if (text.length === 0) {
+      errors.push({ field: 'text', message: 'Bost body cannot be empty.' })
+    }
+    
+    return errors
+  }
 }
+
