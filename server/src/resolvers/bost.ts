@@ -154,9 +154,9 @@ export class BostResolver {
     @Arg('text') text: string,
     @Ctx() {req}: MyContext
   ): Promise<BostResponse> { // ig every return is still a for GQL
-    const bost = await Bost.findOne({where: {id}}) // eq to findOneBy({id})
+    const bost = await Bost.findOne({where: {id, creatorId: req.session.userId}}) // eq to findOneBy({id})
     if (bost === null) {
-      return {errors: [{field: 'bost', message: `There is no bost with id ${id}.`}]}
+      return {errors: [{field: 'bost', message: `No editable bost found.`}]}
     }
     title = title.trim()
     text = text.trim()
@@ -192,11 +192,11 @@ export class BostResolver {
       return false
     }
     if (bost.creatorId === req.session.userId) {
-      Kirb.delete({bostId: id})
+      await Kirb.delete({bostId: id})
+      await Bost.delete({id})
+      return true
     }
-    // delete the bost
-    await Bost.delete({id})
-    return true
+    return false
   }
 
   // =============== HELPERS ===============
