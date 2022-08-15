@@ -28,6 +28,14 @@ class PaginatedBosts {
   hasMore: boolean
 }
 
+@ObjectType()
+export class TextSnippetResponse {
+  @Field()
+  snippet: string
+  @Field(() => Boolean)
+  hasMore: boolean
+}
+
 @Resolver(Bost)
 export class BostResolver { 
   // =============== CREATE ===============
@@ -92,11 +100,15 @@ export class BostResolver {
   // =============== READ ===============
   // GQL computed field : good for performance (usually) b/c they are only run
   // when the data is actually included in the query
-  @FieldResolver(() => String)
+  @FieldResolver(() => TextSnippetResponse)
   textSnippet(
     @Root() root: Bost
-  ) {
-    return root.text.slice(0, 80) + (root.text.length > 80 ? "..." : "")
+  ): TextSnippetResponse {
+    if (root.text.length <= 80) {
+      return {snippet: root.text, hasMore: false}
+    } else {
+      return {snippet: root.text.slice(0, 80) + "...", hasMore: true}
+    }
   }
 
   @FieldResolver(() => Int)

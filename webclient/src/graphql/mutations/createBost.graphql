@@ -4,6 +4,10 @@ mutation CreateBost($input: BostInput!) {
       id
       title
       text
+      textSnippet {
+        snippet
+        hasMore
+      }
       creatorId
       createdAt
       updatedAt

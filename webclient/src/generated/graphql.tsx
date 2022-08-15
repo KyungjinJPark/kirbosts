@@ -26,7 +26,7 @@ export type Bost = {
   kirbCount: Scalars['Int'];
   kirbStatus: Scalars['Int'];
   text: Scalars['String'];
-  textSnippet: Scalars['String'];
+  textSnippet: TextSnippetResponse;
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -138,6 +138,12 @@ export type RegisterInput = {
   username: Scalars['String'];
 };
 
+export type TextSnippetResponse = {
+  __typename?: 'TextSnippetResponse';
+  hasMore: Scalars['Boolean'];
+  snippet: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime'];
@@ -175,7 +181,7 @@ export type CreateBostMutationVariables = Exact<{
 }>;
 
 
-export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any, textSnippet: { __typename?: 'TextSnippetResponse', snippet: string, hasMore: boolean } } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type DeleteBostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -218,7 +224,7 @@ export type UpdateBostMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBostMutation = { __typename?: 'Mutation', updateBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, textSnippet: string, updatedAt: any } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type UpdateBostMutation = { __typename?: 'Mutation', updateBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, updatedAt: any, textSnippet: { __typename?: 'TextSnippetResponse', snippet: string, hasMore: boolean } } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type VoteMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -240,7 +246,7 @@ export type BostTextQueryVariables = Exact<{
 }>;
 
 
-export type BostTextQuery = { __typename?: 'Query', bost?: { __typename?: 'Bost', text: string } | null };
+export type BostTextQuery = { __typename?: 'Query', bost?: { __typename?: 'Bost', id: number, text: string } | null };
 
 export type BostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -248,7 +254,7 @@ export type BostsQueryVariables = Exact<{
 }>;
 
 
-export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', textSnippet: string, id: number, title: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> } };
+export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, textSnippet: { __typename?: 'TextSnippetResponse', snippet: string, hasMore: boolean }, creator: { __typename?: 'User', id: number, username: string } }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -314,6 +320,10 @@ export const CreateBostDocument = gql`
       id
       title
       text
+      textSnippet {
+        snippet
+        hasMore
+      }
       creatorId
       createdAt
       updatedAt
@@ -384,7 +394,10 @@ export const UpdateBostDocument = gql`
       id
       title
       text
-      textSnippet
+      textSnippet {
+        snippet
+        hasMore
+      }
       updatedAt
     }
     errors {
@@ -421,6 +434,7 @@ export function useBostQuery(options: Omit<Urql.UseQueryArgs<BostQueryVariables>
 export const BostTextDocument = gql`
     query BostText($id: Int!) {
   bost(id: $id) {
+    id
     text
   }
 }
@@ -434,7 +448,10 @@ export const BostsDocument = gql`
   bosts(limit: $limit, cursor: $cursor) {
     bosts {
       ...CommonBost
-      textSnippet
+      textSnippet {
+        snippet
+        hasMore
+      }
     }
     hasMore
   }

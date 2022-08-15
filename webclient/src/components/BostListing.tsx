@@ -23,7 +23,7 @@ export const BostListing: React.FC<BostListingProps> = ({bost}) => {
   if (expanded && !fetching) {
     body = data.bost.text
   } else {
-    body = bost.textSnippet
+    body = bost.textSnippet.snippet
   }
   
   return <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
@@ -38,7 +38,7 @@ export const BostListing: React.FC<BostListingProps> = ({bost}) => {
       <Text mt={4}>
         {body}
       </Text>
-      <Flex mt={2}>
+      {bost.textSnippet.hasMore && <Flex mt={2}>
         <IconButton
           onClick={() => setExpanded((prev)=>!prev)}
           isLoading={fetching}
@@ -50,7 +50,7 @@ export const BostListing: React.FC<BostListingProps> = ({bost}) => {
           py={2}
           m="auto"
         />
-      </Flex>
+      </Flex>}
     </Box>
     <EditDeleteBostButtons bostId={bost.id} creatorId={bost.creator.id} />
   </Flex>
