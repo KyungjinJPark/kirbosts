@@ -1,7 +1,8 @@
-import { Box, Button, Flex, Heading, Text, Link, Switch, useColorMode } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Text, Link, Switch, useColorMode, Hide } from "@chakra-ui/react"
 import NextLink from "next/link" // client side routing
 import { useRouter } from "next/router"
 import { useLogoutMutation, useMeQuery } from "../generated/graphql"
+import { Wrapper } from "./Wrapper"
 
 interface NavBarProps {}
 
@@ -35,37 +36,36 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       zIndex={10}
       bg={colorMode === 'light' ? "purple.300" : "purple.900"}
     >
-      <Flex
-        maxW="800px"
-        mx="auto"
-        align="center"
-        py={4}
-      >
-        <Flex align={"end"}>
-          <NextLink href="/"><Link mr={2}>
-            <Heading>Kirbosts</Heading>
-          </Link></NextLink>
-          <Text
-            fontSize="xl"
-            bgGradient="linear(to-r, #FF0080, yellow.400)"
-            bgClip="text"
-            fontWeight="bold"
-          >v0.0.0.0.1</Text>
-        </Flex>
-        <Box ml={'auto'}>
-          <Flex align="center">
-            {body}
-            <Switch
-              id='isChecked'
-              isChecked={colorMode === 'dark'}
-              onChange={toggleColorMode}
-              colorScheme="blackAlpha"
-              size='lg'
-              ml={4}
-            />
+      <Wrapper variant="regular" hasMT={false}>
+        <Flex py={4}>
+          <Flex align={"end"}>
+            <NextLink href="/"><Link mr={2}>
+              <Heading>Kirbosts</Heading>
+            </Link></NextLink>
+            <Hide below="sm">
+              <Text
+                fontSize="xl"
+                bgGradient="linear(to-r, #FF0080, yellow.400)"
+                bgClip="text"
+                fontWeight="bold"
+              >v0.0.0.0.2</Text>
+            </Hide>
           </Flex>
-        </Box>
-      </Flex>
+          <Box ml={'auto'}>
+            <Flex align="center">
+              {body}
+              <Switch
+                id='isChecked'
+                isChecked={colorMode === 'dark'}
+                onChange={toggleColorMode}
+                colorScheme="blackAlpha"
+                size='lg'
+                ml={4}
+              />
+            </Flex>
+          </Box>
+        </Flex>
+      </Wrapper>
     </Box>
   )
 }
