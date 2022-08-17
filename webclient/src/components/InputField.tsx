@@ -7,7 +7,7 @@ type InputFieldProps =
   & InputHTMLAttributes<HTMLInputElement>
   & {
     name: string, // field id
-    label: string,
+    label?: string,
     textarea?: boolean,
   }
 
@@ -21,7 +21,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   const InputComponent = textarea ? Textarea : Input
   return (
     <FormControl isInvalid={/* TODO: !! casts the string to a boolead, how? */!!error /* && form.touched.name */}>
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      {!label ? null : <FormLabel htmlFor={field.name}>{label}</FormLabel>}
       <InputComponent {...field} {...props} id={field.name} />
       {error
         ? <FormErrorMessage>{error}</FormErrorMessage>

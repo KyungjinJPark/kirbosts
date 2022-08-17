@@ -6,6 +6,7 @@ import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
 import { HelloResolver } from './resolvers/hello'
 import { BostResolver } from './resolvers/bost'
+import { CommentResolver } from './resolvers/comment'
 import { UserResolver } from './resolvers/user'
 import Redis from 'ioredis'
 import connectRedis from 'connect-redis' // if types are not included, this will be red squigglied
@@ -60,7 +61,7 @@ const main = async () => {
   // GQL server setup
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, BostResolver, UserResolver],
+      resolvers: [HelloResolver, BostResolver, CommentResolver, UserResolver],
       validate: false,
     }),
     context: ({req, res}): MyContext => {

@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from 'type-graphql'
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { Bost, Kirb } from './'
+import { Bost, Comment, Kirb } from './'
 
 @ObjectType()
 @Entity()
@@ -28,6 +28,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Kirb, (kirb) => kirb.user)
   kirbs: Kirb[]
+
+  @OneToMany(() => Comment, (comment) => comment.creator)
+  comments: Comment[]
 
   @Field()
   @CreateDateColumn()

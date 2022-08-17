@@ -45,14 +45,8 @@ export class BostResolver {
     @Arg('input') input: BostInput,
     @Ctx() {req}: MyContext
   ): Promise<BostResponse> {
-
-    console.log(input);
-
     input.title = input.title.trim()
     input.text = input.text.trim()
-
-    console.log(input);
-
     const errors = this.getBostContentErrors(input.title, input.text)
     if (errors.length !== 0) {
       return {errors}
@@ -128,7 +122,7 @@ export class BostResolver {
     @Root() root: Bost,
     @Ctx() {userLoader}: MyContext,
     ) {
-    return userLoader.load(root.creatorId) // cache-adjacent for server
+    return userLoader.load(root.creatorId) // cache-adjacent for server ?is that true?
   }
   
   @Query(() => PaginatedBosts) // Bost was not a GQL type will I added the decorators to `.../entities/Bost.ts`

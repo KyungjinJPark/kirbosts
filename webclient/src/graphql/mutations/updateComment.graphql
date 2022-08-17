@@ -1,0 +1,12 @@
+mutation UpdateComment($input: UpdateCommentInput!) {
+  updateComment(input: $input) {
+    comment {
+      id
+      bostId
+      text
+      edited
+      updatedAt
+    }
+    errors {...CommonFieldError}
+  }
+}

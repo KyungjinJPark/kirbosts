@@ -42,6 +42,35 @@ export type BostResponse = {
   errors?: Maybe<Array<FieldError>>;
 };
 
+export type Comment = {
+  __typename?: 'Comment';
+  bost: Bost;
+  bostId: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  creator: User;
+  creatorId: Scalars['Int'];
+  edited: Scalars['Boolean'];
+  id: Scalars['Int'];
+  text: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type CommentResponse = {
+  __typename?: 'CommentResponse';
+  comment?: Maybe<Comment>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type CreateCommentInput = {
+  bostId: Scalars['Float'];
+  text: Scalars['String'];
+};
+
+export type DeleteCommentInput = {
+  bostId: Scalars['Float'];
+  commentId: Scalars['Float'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -52,12 +81,15 @@ export type Mutation = {
   __typename?: 'Mutation';
   changePassword: UserResponse;
   createBost: BostResponse;
+  createComment: CommentResponse;
   deleteBost: Scalars['Boolean'];
+  deleteComment: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
   updateBost: BostResponse;
+  updateComment: CommentResponse;
   vote: Scalars['Boolean'];
 };
 
@@ -74,8 +106,18 @@ export type MutationCreateBostArgs = {
 };
 
 
+export type MutationCreateCommentArgs = {
+  input: CreateCommentInput;
+};
+
+
 export type MutationDeleteBostArgs = {
   id: Scalars['Int'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  input: DeleteCommentInput;
 };
 
 
@@ -102,6 +144,11 @@ export type MutationUpdateBostArgs = {
 };
 
 
+export type MutationUpdateCommentArgs = {
+  input: UpdateCommentInput;
+};
+
+
 export type MutationVoteArgs = {
   bostId: Scalars['Int'];
   value: Scalars['Int'];
@@ -115,10 +162,16 @@ export type PaginatedBosts = {
 
 export type Query = {
   __typename?: 'Query';
+  allCommentsByBostId: Array<Comment>;
   bost?: Maybe<Bost>;
   bosts: PaginatedBosts;
   hello: Scalars['String'];
   me?: Maybe<User>;
+};
+
+
+export type QueryAllCommentsByBostIdArgs = {
+  bostId: Scalars['Int'];
 };
 
 
@@ -142,6 +195,12 @@ export type TextSnippetResponse = {
   __typename?: 'TextSnippetResponse';
   hasMore: Scalars['Boolean'];
   snippet: Scalars['String'];
+};
+
+export type UpdateCommentInput = {
+  bostId: Scalars['Float'];
+  commentId: Scalars['Float'];
+  text: Scalars['String'];
 };
 
 export type User = {
@@ -183,12 +242,26 @@ export type CreateBostMutationVariables = Exact<{
 
 export type CreateBostMutation = { __typename?: 'Mutation', createBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, creatorId: number, createdAt: any, updatedAt: any, textSnippet: { __typename?: 'TextSnippetResponse', snippet: string, hasMore: boolean } } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type CreateCommentMutationVariables = Exact<{
+  input: CreateCommentInput;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'CommentResponse', comment?: { __typename?: 'Comment', id: number, bostId: number, text: string, edited: boolean, creatorId: number, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type DeleteBostMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
 export type DeleteBostMutation = { __typename?: 'Mutation', deleteBost: boolean };
+
+export type DeleteCommentMutationVariables = Exact<{
+  input: DeleteCommentInput;
+}>;
+
+
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: boolean };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -226,6 +299,13 @@ export type UpdateBostMutationVariables = Exact<{
 
 export type UpdateBostMutation = { __typename?: 'Mutation', updateBost: { __typename?: 'BostResponse', bost?: { __typename?: 'Bost', id: number, title: string, text: string, updatedAt: any, textSnippet: { __typename?: 'TextSnippetResponse', snippet: string, hasMore: boolean } } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type UpdateCommentMutationVariables = Exact<{
+  input: UpdateCommentInput;
+}>;
+
+
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'CommentResponse', comment?: { __typename?: 'Comment', id: number, bostId: number, text: string, edited: boolean, updatedAt: any } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type VoteMutationVariables = Exact<{
   value: Scalars['Int'];
   bostId: Scalars['Int'];
@@ -255,6 +335,13 @@ export type BostsQueryVariables = Exact<{
 
 
 export type BostsQuery = { __typename?: 'Query', bosts: { __typename?: 'PaginatedBosts', hasMore: boolean, bosts: Array<{ __typename?: 'Bost', id: number, title: string, kirbCount: number, kirbStatus: number, createdAt: any, updatedAt: any, textSnippet: { __typename?: 'TextSnippetResponse', snippet: string, hasMore: boolean }, creator: { __typename?: 'User', id: number, username: string } }> } };
+
+export type CommentsQueryVariables = Exact<{
+  bostId: Scalars['Int'];
+}>;
+
+
+export type CommentsQuery = { __typename?: 'Query', allCommentsByBostId: Array<{ __typename?: 'Comment', id: number, bostId: number, text: string, edited: boolean, createdAt: any, updatedAt: any, creator: { __typename?: 'User', id: number, username: string } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -338,6 +425,28 @@ export const CreateBostDocument = gql`
 export function useCreateBostMutation() {
   return Urql.useMutation<CreateBostMutation, CreateBostMutationVariables>(CreateBostDocument);
 };
+export const CreateCommentDocument = gql`
+    mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    comment {
+      id
+      bostId
+      text
+      edited
+      creatorId
+      createdAt
+      updatedAt
+    }
+    errors {
+      ...CommonFieldError
+    }
+  }
+}
+    ${CommonFieldErrorFragmentDoc}`;
+
+export function useCreateCommentMutation() {
+  return Urql.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument);
+};
 export const DeleteBostDocument = gql`
     mutation DeleteBost($id: Int!) {
   deleteBost(id: $id)
@@ -346,6 +455,15 @@ export const DeleteBostDocument = gql`
 
 export function useDeleteBostMutation() {
   return Urql.useMutation<DeleteBostMutation, DeleteBostMutationVariables>(DeleteBostDocument);
+};
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($input: DeleteCommentInput!) {
+  deleteComment(input: $input)
+}
+    `;
+
+export function useDeleteCommentMutation() {
+  return Urql.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
@@ -410,6 +528,26 @@ export const UpdateBostDocument = gql`
 export function useUpdateBostMutation() {
   return Urql.useMutation<UpdateBostMutation, UpdateBostMutationVariables>(UpdateBostDocument);
 };
+export const UpdateCommentDocument = gql`
+    mutation UpdateComment($input: UpdateCommentInput!) {
+  updateComment(input: $input) {
+    comment {
+      id
+      bostId
+      text
+      edited
+      updatedAt
+    }
+    errors {
+      ...CommonFieldError
+    }
+  }
+}
+    ${CommonFieldErrorFragmentDoc}`;
+
+export function useUpdateCommentMutation() {
+  return Urql.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument);
+};
 export const VoteDocument = gql`
     mutation Vote($value: Int!, $bostId: Int!) {
   vote(value: $value, bostId: $bostId)
@@ -460,6 +598,26 @@ export const BostsDocument = gql`
 
 export function useBostsQuery(options: Omit<Urql.UseQueryArgs<BostsQueryVariables>, 'query'>) {
   return Urql.useQuery<BostsQuery>({ query: BostsDocument, ...options });
+};
+export const CommentsDocument = gql`
+    query Comments($bostId: Int!) {
+  allCommentsByBostId(bostId: $bostId) {
+    id
+    bostId
+    text
+    edited
+    creator {
+      id
+      username
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCommentsQuery(options: Omit<Urql.UseQueryArgs<CommentsQueryVariables>, 'query'>) {
+  return Urql.useQuery<CommentsQuery>({ query: CommentsDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

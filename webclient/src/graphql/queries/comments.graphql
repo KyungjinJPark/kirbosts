@@ -1,0 +1,14 @@
+query Comments($bostId: Int!) {
+  allCommentsByBostId(bostId: $bostId) {
+    id
+    bostId
+    text
+    edited
+    creator {
+      id
+      username
+    }
+    createdAt
+    updatedAt
+  }
+}

@@ -28,13 +28,21 @@ export const BostListing: React.FC<BostListingProps> = ({bost}) => {
   
   return <Flex key={bost.id} p={5} shadow="md" borderWidth="1px">
     <AddKirbSection bost={bost} />
-    <Box flex={1} w="91%"> {/* This is sus & might break */}
-      <NextLink href={`/bost/${bost.id}`}>
-        <Link>
-          <Heading fontSize="xl">{bost.title}</Heading>
-        </Link>
-      </NextLink>
-      <Text>posted by {bost.creator.username}</Text>
+    {/* this width breaks things when bost is long */}
+    <Box width="94%">{/* All these width settings are making me uncomfort */}
+      <Flex justifyContent="space-between">
+        <Box flex={1}>
+          <NextLink href={`/bost/${bost.id}`}>
+            <Link>
+              <Heading fontSize="xl">{bost.title}</Heading>
+            </Link>
+          </NextLink>
+          <Text>posted by {bost.creator.username}</Text>
+        </Box>
+        <Box minW="4.75rem" ml={2}>
+          <EditDeleteBostButtons bostId={bost.id} creatorId={bost.creator.id} />
+        </Box>
+      </Flex>
       <Text mt={4}>
         {body}
       </Text>
@@ -52,6 +60,5 @@ export const BostListing: React.FC<BostListingProps> = ({bost}) => {
         />
       </Flex>}
     </Box>
-    <EditDeleteBostButtons bostId={bost.id} creatorId={bost.creator.id} />
   </Flex>
 }

@@ -1,0 +1,14 @@
+mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    comment {
+      id
+      bostId
+      text
+      edited
+      creatorId
+      createdAt
+      updatedAt
+    }
+    errors {...CommonFieldError}
+  }
+}

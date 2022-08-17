@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm'
 import path from 'path'
 import { __prod__ } from './constants'
-import { Bost, Kirb, User } from './entities'
+import { Bost, Comment, Kirb, User } from './entities'
 
 export default {
   // allowGlobalContext: true,
@@ -13,6 +13,11 @@ export default {
   password: 'kirbosts',
   logging: true,
   synchronize: !__prod__,
-  entities: [Bost, User, Kirb],
+  entities: [
+    Bost,
+    Comment,
+    Kirb,
+    User,
+  ],
   migrations: [path.join(__dirname, './migrations/*')]
 } as ConstructorParameters<typeof DataSource>[0]

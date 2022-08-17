@@ -16,9 +16,11 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - CRUD Bosts (Posts)
   - incremental fetching
   - Kirbs (Votes)
+- CRUD Comments
 - User accounts
 - User sessions
 - Forgot password
+- Dark mode
 
 ## Dev Tech
 
@@ -36,6 +38,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
   - uses `Redis` to manage [tokens?]
 - resolvers use middleware for PEP
 - cursor-based bost pagination
+- bost content fetched on as needed basis
 - field resolvers to compute GQL data on the fly
 - uses `DataLoader` to batch User & Kirb SQL queries
 
