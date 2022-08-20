@@ -1,6 +1,6 @@
 import { dedupExchange, fetchExchange, gql } from 'urql'
 import { Cache, cacheExchange, Entity, Resolver } from '@urql/exchange-graphcache'
-import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation, CreateBostMutation, VoteMutation, VoteMutationVariables, DeleteBostMutation, DeleteBostMutationVariables } from '../generated/graphql'
+import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation, CreateBostMutation, VoteMutation, VoteMutationVariables, DeleteBostMutation, DeleteBostMutationVariables, CreateCommentMutation, DeleteCommentMutation, DeleteCommentMutationVariables, CommentsDocument, CreateCommentMutationVariables } from '../generated/graphql'
 import { isServer } from './isServer'
 
 // BEGIN global error handling
@@ -133,6 +133,22 @@ export const createUrqlClient = (ssrExchange, ctx) => {
                   {id: bostId, kirbCount: newCount, kirbStatus: newStatus}
                 )
               }
+            },
+            createComment: (result: CreateCommentMutation, args: CreateCommentMutationVariables, cache, info) => {
+              cache.updateQuery({query: CommentsDocument, variables: {bostId: args.input.bostId}}, (data) => {
+                if (result.createComment.errors) {
+                  return data
+                }
+                const comments = data.allCommentsByBostId as any[]
+                const {comment} = result.createComment as any
+                const meData = cache.readQuery({query: MeDocument})
+                comment.creator = meData.me
+                comments.unshift(comment)
+                return {...data, allCommentsByBostId: comments}
+              })
+            },
+            deleteComment: (result: DeleteCommentMutation, args: DeleteCommentMutationVariables, cache, info) => {
+              cache.invalidate({__typename: 'Comment', bostId: args.input.bostId, id: args.input.commentId})
             },
           },
         },

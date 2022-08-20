@@ -50,6 +50,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - `GraphQL Code Generator`
 - server side rendering with `next-urql`
 - custom `URQL` pagination
+- site features work closely with `URQL` cache for real time user feedback
 
 ---
 
