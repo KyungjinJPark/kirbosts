@@ -1,7 +1,8 @@
-import { dedupExchange, fetchExchange, gql } from 'urql'
+import { ClientOptions, dedupExchange, fetchExchange, gql } from 'urql'
 import { Cache, cacheExchange, Entity, Resolver } from '@urql/exchange-graphcache'
 import { LoginMutation, RegisterMutation, MeDocument, MeQuery, LogoutMutation, ChangePasswordMutation, CreateBostMutation, VoteMutation, VoteMutationVariables, DeleteBostMutation, DeleteBostMutationVariables, CreateCommentMutation, DeleteCommentMutation, DeleteCommentMutationVariables, CommentsDocument, CreateCommentMutationVariables } from '../generated/graphql'
 import { isServer } from './isServer'
+import { NextUrqlClientConfig } from 'next-urql'
 
 // BEGIN global error handling
 import { pipe, tap } from 'wonka'
@@ -22,18 +23,20 @@ const errorExchange: Exchange = ({forward}) => ops$ => {
 }
 // END global error handling
 
-export const createUrqlClient = (ssrExchange, ctx) => {
-  let cookie
+export const createUrqlClient: NextUrqlClientConfig = (ssrExchange, ctx): ClientOptions => {
+  const headers = {} as any
   if (isServer()) {
-    cookie = ctx.req.headers.cookie;
+    if (!ctx) {
+      console.log('whut thu');
+    } else {
+      headers.cookie = ctx.req.headers.cookie;
+    }
   }
   return ({
-    url: 'http://localhost:4000/graphql',
+    url: `${process.env.NEXT_PUBLIC_API}`,
     fetchOptions: {
       credentials: 'include' as const,
-      headers: cookie
-        ? {cookie}
-        : undefined
+      headers,
     },
     exchanges: [
       dedupExchange,

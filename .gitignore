@@ -2,9 +2,12 @@ node_modules
 
 # SERVER
 /server/dist
+/server/.env
+
 
 # WEBSITE
 /webclient/build
+/webclient/.env.local
 
 # next.js
 /webclient/.next

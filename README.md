@@ -41,6 +41,7 @@ In actuality, `Kirbosts` was created for fullstack CRUD (Create, Read, Update, D
 - bost content fetched on as needed basis
 - field resolvers to compute GQL data on the fly
 - uses `DataLoader` to batch User & Kirb SQL queries
+- containerized using `Docker`
 
 ### Webclient
 

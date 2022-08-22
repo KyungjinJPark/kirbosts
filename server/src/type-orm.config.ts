@@ -5,12 +5,8 @@ import { Bost, Comment, Kirb, User } from './entities'
 
 export default {
   // allowGlobalContext: true,
-  type: "postgres",
-  host: "localhost",
-  port: 5432,
-  database: 'kirbosts', // `as const` to make type more specific
-  username: 'kirbosts',
-  password: 'kirbosts',
+  type: 'postgres', // `as const` to make type more specific
+  url: process.env.DATABASE_URL,
   logging: true,
   synchronize: !__prod__,
   entities: [

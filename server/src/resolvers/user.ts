@@ -207,7 +207,7 @@ export class UserResolver {
     await sendEmail(
       user.email,
       `<p>Hey</p>
-      <p><a href="http://localhost:3000/forgot-password/${token}">
+      <p><a href="${process.env.FORGOT_PASSWORD_URL}/${token}">
         can i ask you for a quick favor?
       </a></p>`
     )

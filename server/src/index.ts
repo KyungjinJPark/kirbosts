@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import 'dotenv-safe/config'
 import typeOrmConfig from './type-orm.config'
 import { DataSource } from "typeorm";
 import express from 'express'
@@ -14,15 +15,13 @@ import session from "express-session"
 import { COOKIE_NAME, __prod__ } from './constants'
 import { MyContext } from './types'
 import cors from 'cors'
-import { createUserLoader } from './utils/createUserLoader';
-import { createKirbLoader } from './utils/createKirbLoader';
-// import { Bost } from './entities/Bost';
-// import { User } from './entities/User';
-// import { Kirb } from './entities/Kirb';
+import { createUserLoader } from './utils/createUserLoader'
+import { createKirbLoader } from './utils/createKirbLoader'
+// import { Bost, Kirb, User } from './entities'
 
 const main = async () => {
   // =============== Redis set-up ===============
-  const redis = new Redis()
+  const redis = new Redis(process.env.REDIS_URL)
   const RedisStore = connectRedis(session)
 
   // =============== TypeORM set-up ===============
@@ -39,7 +38,7 @@ const main = async () => {
   })
   .catch((error) => console.log(error))
   // // ds.dropDatabase()
-  ds.runMigrations()
+  // ds.runMigrations()
 
   // =============== old MikroORM examples ===============
   // const bost = orm.em.create(Bost, {title: 'test bost'}) // NOT auto-added to db
@@ -51,7 +50,7 @@ const main = async () => {
   const app = express()
   // cors
   app.use(cors({
-    origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+    origin: ['https://studio.apollographql.com', process.env.ALLOWED_ORIGIN],
     credentials: true
   }))
   // testing home
@@ -91,7 +90,7 @@ const main = async () => {
         // secure: true
       },
       saveUninitialized: false,
-      secret: "secret_should_be_hidden",
+      secret: process.env.REDIS_SESSION_SECRET,
       resave: false,
     })
   )
@@ -104,9 +103,9 @@ const main = async () => {
     cors: false,
     path: "/graphql"
   })
-  // listen at port 4000
-  app.listen(4000, () => {
-    console.log('server started on localhost:4000');
+  // listen at port `${process.env.MW_PORT}`
+  app.listen(parseInt(process.env.MW_PORT), () => {
+    console.log(`server started on port ${process.env.MW_PORT}`);
   })
 }
 
