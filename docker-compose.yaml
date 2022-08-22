@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  kb-redis:
+    image: redis:7
+
+  kb-psql:
+    image: postgres:14
+    volumes:
+      - /home/koi/volumes/postgresql/data:/var/lib/postgresql/data
+    env_file:
+      - ./env/db.env
+
+  kb-server:
+    build: ./server
+    ports:
+      - '4000:4000'
+    env_file:
+      - ./env/server.env
+
+  kb-webc:
+    build: ./webclient
+    ports:
+      - '3000:3000'

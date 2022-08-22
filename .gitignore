@@ -1,4 +1,10 @@
-node_modules
+# PARENT
+/env
+
+
+# BOTH
+/*/node_modules
+
 
 # SERVER
 /server/dist
