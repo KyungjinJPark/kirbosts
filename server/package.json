@@ -4,7 +4,7 @@
   "description": "`Kirbosts` is a reddit-like web app created for fullstack CRUD (Create, Read, Update, Delete) app development practice.",
   "main": "index.js",
   "scripts": {
-    "gen-env-types": "npx gen-env-types .env -o src/env.d.ts -e .",
+    "gen-env-types": "npx gen-env-types ../env/server.env -o src/env.d.ts -e .",
     "watch": "tsc -w",
     "dev": "nodemon dist/index.js",
     "build": "tsc",

@@ -8,7 +8,6 @@
 
 # SERVER
 /server/dist
-/server/.env
 
 
 # WEBSITE

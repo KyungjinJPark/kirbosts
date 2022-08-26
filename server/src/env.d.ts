@@ -1,12 +1,12 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      DATABASE_URL: string;
-      REDIS_URL: string;
-      REDIS_SESSION_SECRET: string;
-      ALLOWED_ORIGIN: string;
-      FORGOT_PASSWORD_URL: string;
+      ALLOWED_ORIGINS: string;
       MW_PORT: string;
+      REDIS_SESSION_SECRET: string;
+      REDIS_URL: string;
+      DATABASE_URL: string;
+      FORGOT_PASSWORD_URL: string;
     }
   }
 }

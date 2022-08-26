@@ -50,7 +50,7 @@ const main = async () => {
   const app = express()
   // cors
   app.use(cors({
-    origin: ['https://studio.apollographql.com', process.env.ALLOWED_ORIGIN],
+    origin: process.env.ALLOWED_ORIGINS.split(' '),
     credentials: true
   }))
   // testing home

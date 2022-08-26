@@ -2,22 +2,30 @@ version: '3.8'
 services:
   kb-redis:
     image: redis:7
+    container_name: kb-redis
+    restart: unless-stopped
 
   kb-psql:
     image: postgres:14
+    container_name: kb-psql
     volumes:
-      - /home/koi/volumes/postgresql/data:/var/lib/postgresql/data
+      - /home/barbados/volumes/postgresql/data:/var/lib/postgresql/data
     env_file:
       - ./env/db.env
+    restart: unless-stopped
 
   kb-server:
     build: ./server
+    container_name: kb-server
     ports:
       - '4000:4000'
     env_file:
       - ./env/server.env
+    restart: unless-stopped
 
   kb-webc:
     build: ./webclient
+    container_name: kb-webc
     ports:
-      - '3000:3000'
+      - '80:3000'
+    restart: unless-stopped
